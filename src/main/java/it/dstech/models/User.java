@@ -20,8 +20,6 @@ public class User {
 
 	private String password;
 
-	private RoleUser role;
-
 	private TipoUtente tipo;
 
 	private String tel;
@@ -86,14 +84,6 @@ public class User {
 		this.password = password;
 	}
 
-	public RoleUser getRole() {
-		return role;
-	}
-
-	public void setRole(RoleUser role) {
-		this.role = role;
-	}
-
 	public TipoUtente getTipo() {
 		return tipo;
 	}
@@ -144,8 +134,21 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", tipo="
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", tipo="
 				+ tipo + ", tel=" + tel + ", via=" + via + ", cap=" + cap + ", listaProdotti=" + listaProdotti
 				+ ", carteDiCredito=" + carteDiCredito + "]";
 	}
+
+	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
+			UserProfileType profileType) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.tipo = tipo;
+		this.tel = tel;
+		this.via = via;
+		this.cap = cap;
+		this.profileType = profileType;
+	}
+	
 }

@@ -1,6 +1,7 @@
 package it.dstech;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,8 +24,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.dstech.models.Categoria;
 import it.dstech.models.Prodotto;
+import it.dstech.models.TipoUtente;
 import it.dstech.models.Unita;
 import it.dstech.models.User;
+import it.dstech.models.UserProfileType;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -40,9 +43,33 @@ public class SuperMarketApplicationTests {
 	public void contextLoads() {
 	}
 
+	
 	@Test
-	public void saveOrUpdateProdotto() throws JsonProcessingException, Exception {
+	public void  RegisterTest() throws JsonProcessingException, Exception {
+	
+		UserProfileType userProfileType=UserProfileType.ROLE_USER;
+		
+		TipoUtente tipoUtente = TipoUtente.UTENTE_NORMALE;
+		
+		User user=new User("dan","dan",tipoUtente,"999999","VIA","00156",userProfileType);
+		
+		mockMvc.perform(post("/register").content(mapper.writeValueAsString(user))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isCreated()).andDo(print());
+		
+	}
+	
+	@Test
+	public void LoginTest() throws JsonProcessingException, Exception {
+	
+		
+	}
+	
+		
+	
+	@Test
+	public void saveOrUpdateProdottoTest() throws JsonProcessingException, Exception {
 
+		
 		List<Prodotto> lista = new ArrayList<>();
 
 		Categoria categoria=Categoria.ALIMENTI;
@@ -56,8 +83,8 @@ public class SuperMarketApplicationTests {
 		lista.add(prodotto);
 		
 
-		mockMvc.perform(get("/prodotto/save").content(mapper.writeValueAsString(lista))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isCreated()).andDo(print());
+		mockMvc.perform(post("/prodotto/saveOrUpdateProdotto").with(user("daniele").password("daniele"))).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
 	}
 	
 	@Test
@@ -73,6 +100,8 @@ public class SuperMarketApplicationTests {
 		mockMvc.perform(get("/prodotto/findByCategoria/alimenti")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
 	}
+	
+	
 	
 	
 }

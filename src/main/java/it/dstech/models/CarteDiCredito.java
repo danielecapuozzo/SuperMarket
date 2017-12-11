@@ -20,7 +20,7 @@ public class CarteDiCredito {
 
 	private String numero;
 
-	private LocalDate scadenza;
+	private String scadenza;
 
 	private String ccv;
 
@@ -50,11 +50,12 @@ public class CarteDiCredito {
 		this.numero = numero;
 	}
 
-	public LocalDate getScadenza() {
+
+	public String getScadenza() {
 		return scadenza;
 	}
 
-	public void setScadenza(LocalDate scadenza) {
+	public void setScadenza(String scadenza) {
 		this.scadenza = scadenza;
 	}
 
