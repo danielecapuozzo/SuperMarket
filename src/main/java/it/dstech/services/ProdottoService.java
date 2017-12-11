@@ -13,7 +13,9 @@ public interface ProdottoService {
 	
 	List<Prodotto> findByCategoria(Categoria categoria);
 	
-	List<Prodotto> findAllDisponibili();
+//	List<Prodotto> findAllDisponibili();
+	List<Prodotto> 	 findByQuantitaDisponibileGreaterThan(double quantitaDisponibile);
+
 	
 	void deleteProdotto(int id);
 	

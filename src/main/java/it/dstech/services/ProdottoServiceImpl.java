@@ -29,6 +29,7 @@ public class ProdottoServiceImpl implements ProdottoService {
 	public void deleteProdotto(int id) {
 		prodottoRepository.delete(id);
 	}
+	
 	@Override
 	public Prodotto findById(int id) {
 		return prodottoRepository.findOne(id);
@@ -41,11 +42,8 @@ public class ProdottoServiceImpl implements ProdottoService {
 	}
 
 	@Override
-	public List<Prodotto> findAllDisponibili() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Prodotto> findByQuantitaDisponibileGreaterThan(double quantitaDisponibile) {
+		return prodottoRepository.findByQuantitaDisponibileGreaterThan(quantitaDisponibile);
 	}
-
-	
 
 }
