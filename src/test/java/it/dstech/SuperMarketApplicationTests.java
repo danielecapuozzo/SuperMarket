@@ -2,6 +2,7 @@ package it.dstech;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -47,9 +48,7 @@ public class SuperMarketApplicationTests {
 		Categoria categoria=Categoria.ALIMENTI;
 		
 		Unita unita = Unita.PEZZO;
-		
-		User user=new User();
-			
+					
 		LocalDate localDate = LocalDate.of(2017,04,28);
 
 		Prodotto prodotto = new Prodotto("pollo","aia", localDate ,categoria, 10, 1, unita,220,210,224,"img", 217);
@@ -60,4 +59,20 @@ public class SuperMarketApplicationTests {
 		mockMvc.perform(get("/prodotto/save").content(mapper.writeValueAsString(lista))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isCreated()).andDo(print());
 	}
+	
+	@Test
+	public void findAllTest() throws Exception {
+
+		mockMvc.perform(get("/prodotto/findAll")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
+	}
+	
+	@Test
+	public void findByMarcaTest() throws Exception {
+
+		mockMvc.perform(get("/prodotto/findByCategoria/alimenti")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
+	}
+	
+	
 }
