@@ -33,6 +33,25 @@ public class User {
 
 	private String cap;
 	
+	private UserProfileType profileType;
+
+	
+	public UserProfileType getProfileType() {
+		return profileType;
+	}
+
+	public void setProfileType(UserProfileType profileType) {
+		this.profileType = profileType;
+	}
+
+	public List<CarteDiCredito> getCarteDiCredito() {
+		return carteDiCredito;
+	}
+
+	public void setCarteDiCredito(List<CarteDiCredito> carteDiCredito) {
+		this.carteDiCredito = carteDiCredito;
+	}
+
 	@JsonIgnore
 	@ManyToMany(mappedBy = "listaUser")
 	private List<Prodotto> listaProdotti;
