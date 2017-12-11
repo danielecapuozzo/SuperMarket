@@ -68,7 +68,7 @@ public class SuperMarketApplicationTests {
 	}
 	
 	@Test
-	public void findByMarcaTest() throws Exception {
+	public void findByCategoriaTest() throws Exception {
 
 		mockMvc.perform(get("/prodotto/findByCategoria/alimenti")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
