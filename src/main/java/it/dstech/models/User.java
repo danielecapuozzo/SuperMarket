@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,16 +32,18 @@ public class User {
 	private String via;
 
 	private String cap;
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "listaUser")
+	private List<Prodotto> listaProdotti;
 
 	@JsonIgnore
 	@OneToMany(mappedBy="user")
 	private List<CarteDiCredito> cartaCredito;
 
-	public User(int id, String username, String password, RoleUser role, TipoUtente tipo, String tel, String via,
-			String cap, List<CarteDiCredito> cartaCredito) {
-
+	public User() {
+		this.listaProdotti = new ArrayList<>();
 		this.cartaCredito = new ArrayList<>();
-
 	}
 
 	public int getId() {
@@ -107,6 +110,14 @@ public class User {
 		this.cap = cap;
 	}
 
+	public List<Prodotto> getListaProdotti() {
+		return listaProdotti;
+	}
+
+	public void setListaProdotti(List<Prodotto> listaProdotti) {
+		this.listaProdotti = listaProdotti;
+	}
+
 	public List<CarteDiCredito> getCartaCredito() {
 		return cartaCredito;
 	}
@@ -118,7 +129,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", tipo="
-				+ tipo + ", tel=" + tel + ", via=" + via + ", cap=" + cap + ", cartaCredito=" + cartaCredito + "]";
+				+ tipo + ", tel=" + tel + ", via=" + via + ", cap=" + cap + ", listaProdotti=" + listaProdotti
+				+ ", cartaCredito=" + cartaCredito + "]";
 	}
-
 }

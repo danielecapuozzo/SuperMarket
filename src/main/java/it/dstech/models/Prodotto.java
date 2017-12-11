@@ -1,10 +1,18 @@
 package it.dstech.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Prodotto {
@@ -37,9 +45,16 @@ public class Prodotto {
 	
 	private int offerta;
 	
-	private User user;
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		      name="USER_PROD",
+		      joinColumns=@JoinColumn(name="PROD_ID", referencedColumnName="ID"),
+		      inverseJoinColumns=@JoinColumn(name="USER_ID", referencedColumnName="ID"))
+	private List<User> listaUser;
 
 	public Prodotto() {
+		this.listaUser = new ArrayList<>();
 	}
 
 	public int getId() {
@@ -146,12 +161,21 @@ public class Prodotto {
 		this.offerta = offerta;
 	}
 
+	public List<User> getListaUser() {
+		return listaUser;
+	}
+
+	public void setListaUser(List<User> listaUser) {
+		this.listaUser = listaUser;
+	}
+
 	@Override
 	public String toString() {
-		return "Prodotto [id=" + id + ", nome=" + nome + ", marca=" + marca + ", quantitaDisponibile="
-				+ quantitaDisponibile + ", quantitaDaAcquistare=" + quantitaDaAcquistare + ", prezzoUnitario="
+		return "Prodotto [id=" + id + ", nome=" + nome + ", marca=" + marca + ", dataDiScadenza=" + dataDiScadenza
+				+ ", categoria=" + categoria + ", quantitaDisponibile=" + quantitaDisponibile
+				+ ", quantitaDaAcquistare=" + quantitaDaAcquistare + ", unita=" + unita + ", prezzoUnitario="
 				+ prezzoUnitario + ", prezzoSenzaIva=" + prezzoSenzaIva + ", prezzoIvato=" + prezzoIvato + ", img="
-				+ img + ", offerta=" + offerta + "]";
+				+ img + ", offerta=" + offerta + ", listaUser=" + listaUser + "]";
 	}
 	
 }
