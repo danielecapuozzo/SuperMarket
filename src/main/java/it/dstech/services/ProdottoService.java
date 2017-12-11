@@ -2,6 +2,7 @@ package it.dstech.services;
 
 import java.util.List;
 
+import it.dstech.models.Categoria;
 import it.dstech.models.Prodotto;
 
 public interface ProdottoService {
@@ -10,7 +11,7 @@ public interface ProdottoService {
 	
 	List<Prodotto> findAll();
 	
-	List<Prodotto> findByCategoria(String categoria);
+	List<Prodotto> findByCategoria(Categoria categoria);
 	
 	List<Prodotto> findAllDisponibili();
 	
@@ -18,6 +19,5 @@ public interface ProdottoService {
 	
 	public Prodotto findById(int id);
 	
-	public List<Prodotto> findByUserId(int id);
 	
 }

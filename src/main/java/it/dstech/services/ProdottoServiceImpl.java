@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import it.dstech.models.Categoria;
 import it.dstech.models.Prodotto;
 import it.dstech.repository.ProdottoRepository;
 
@@ -31,13 +33,9 @@ public class ProdottoServiceImpl implements ProdottoService {
 	public Prodotto findById(int id) {
 		return prodottoRepository.findOne(id);
 	}
-	@Override
-	public List<Prodotto> findByUserId(int id) {
-		return (List<Prodotto>) prodottoRepository.findByUser_Id(id);
-	}
 
 	@Override
-	public List<Prodotto> findByCategoria(String categoria) {
+	public List<Prodotto> findByCategoria(Categoria categoria) {
 		return (List<Prodotto>) prodottoRepository.findByCategoria(categoria);
 
 	}
@@ -47,5 +45,7 @@ public class ProdottoServiceImpl implements ProdottoService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

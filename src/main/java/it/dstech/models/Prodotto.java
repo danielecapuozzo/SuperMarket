@@ -45,6 +45,7 @@ public class Prodotto {
 	
 	private int offerta;
 	
+	
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
