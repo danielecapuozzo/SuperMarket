@@ -36,7 +36,8 @@ public class Prodotto {
 	private String img;
 	
 	private int offerta;
-
+	
+	private User user;
 
 	public Prodotto() {
 	}

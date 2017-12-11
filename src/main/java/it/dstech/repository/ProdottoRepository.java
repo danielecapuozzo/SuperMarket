@@ -8,7 +8,7 @@ public interface ProdottoRepository extends CrudRepository<Prodotto, Integer> {
 
 	Prodotto findById(int id);
 	
-	List<Prodotto> findByUserId(int id);
+	List<Prodotto> findByUser_Id(int id);
 	
 	Prodotto findByCategoria (String categoria);
 	
