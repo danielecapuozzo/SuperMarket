@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 
@@ -29,6 +32,8 @@ public class User {
 
 	private String cap;
 
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
 	private List<CarteDiCredito> cartaCredito;
 
 	public User(int id, String username, String password, RoleUser role, TipoUtente tipo, String tel, String via,

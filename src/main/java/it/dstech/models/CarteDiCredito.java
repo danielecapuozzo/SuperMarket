@@ -3,8 +3,13 @@ package it.dstech.models;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class CarteDiCredito {
@@ -21,6 +26,9 @@ public class CarteDiCredito {
 
 	private double credito;
 
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="USER_ID")
 	private User user;
 
 	public CarteDiCredito() {
