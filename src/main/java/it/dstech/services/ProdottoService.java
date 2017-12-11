@@ -10,6 +10,10 @@ public interface ProdottoService {
 	
 	List<Prodotto> findAll();
 	
+	List<Prodotto> findByCategoria(String categoria);
+	
+	List<Prodotto> findAllDisponibili();
+	
 	void deleteProdotto(int id);
 	
 	public Prodotto findById(int id);

@@ -33,7 +33,19 @@ public class ProdottoServiceImpl implements ProdottoService {
 	}
 	@Override
 	public List<Prodotto> findByUserId(int id) {
-		return (List<Prodotto>) prodottoRepository.findByUser_id(id);
+		return (List<Prodotto>) prodottoRepository.findByUser_Id(id);
+	}
+
+	@Override
+	public List<Prodotto> findByCategoria(String categoria) {
+		return (List<Prodotto>) prodottoRepository.findByCategoria(categoria);
+
+	}
+
+	@Override
+	public List<Prodotto> findAllDisponibili() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

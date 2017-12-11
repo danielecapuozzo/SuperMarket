@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import it.dstech.models.CarteDiCredito;
 
-public interface CartaCreditoRepository extends CrudRepository<CarteDiCredito, Integer> {
+public interface CarteDiCreditoRepository extends CrudRepository<CarteDiCredito, Integer> {
 
 	List<CarteDiCredito> findByUser_id(int id);
 

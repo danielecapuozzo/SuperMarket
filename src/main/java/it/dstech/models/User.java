@@ -39,11 +39,11 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(mappedBy="user")
-	private List<CarteDiCredito> cartaCredito;
+	private List<CarteDiCredito> carteDiCredito;
 
 	public User() {
 		this.listaProdotti = new ArrayList<>();
-		this.cartaCredito = new ArrayList<>();
+		this.carteDiCredito = new ArrayList<>();
 	}
 
 	public int getId() {
@@ -119,17 +119,17 @@ public class User {
 	}
 
 	public List<CarteDiCredito> getCartaCredito() {
-		return cartaCredito;
+		return carteDiCredito;
 	}
 
 	public void setCartaCredito(List<CarteDiCredito> cartaCredito) {
-		this.cartaCredito = cartaCredito;
+		this.carteDiCredito = cartaCredito;
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", tipo="
 				+ tipo + ", tel=" + tel + ", via=" + via + ", cap=" + cap + ", listaProdotti=" + listaProdotti
-				+ ", cartaCredito=" + cartaCredito + "]";
+				+ ", carteDiCredito=" + carteDiCredito + "]";
 	}
 }
