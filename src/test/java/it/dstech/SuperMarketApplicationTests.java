@@ -29,79 +29,8 @@ import it.dstech.models.Unita;
 import it.dstech.models.User;
 import it.dstech.models.UserProfileType;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+
 public class SuperMarketApplicationTests {
 	
-	@Autowired
-	private MockMvc mockMvc;
-	
-	private ObjectMapper mapper = new ObjectMapper();
-	
-	@Test
-	public void contextLoads() {
-	}
 
-	
-	@Test
-	public void  RegisterTest() throws JsonProcessingException, Exception {
-	
-		UserProfileType userProfileType=UserProfileType.ROLE_USER;
-		
-		TipoUtente tipoUtente = TipoUtente.UTENTE_NORMALE;
-		
-		User user=new User("dan","dan",tipoUtente,"999999","VIA","00156",userProfileType);
-		
-		mockMvc.perform(post("/register").content(mapper.writeValueAsString(user))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isCreated()).andDo(print());
-		
-	}
-	
-	@Test
-	public void LoginTest() throws JsonProcessingException, Exception {
-	
-		
-	}
-	
-		
-	
-	@Test
-	public void saveOrUpdateProdottoTest() throws JsonProcessingException, Exception {
-
-		
-		List<Prodotto> lista = new ArrayList<>();
-
-		Categoria categoria=Categoria.ALIMENTI;
-		
-		Unita unita = Unita.PEZZO;
-					
-		LocalDate localDate = LocalDate.of(2017,04,28);
-
-		Prodotto prodotto = new Prodotto("pollo","aia", "27/10/2018" ,categoria, 10, 1, unita,220,210,224,"img", 217);
-
-		lista.add(prodotto);
-		
-
-		mockMvc.perform(post("/prodotto/saveOrUpdateProdotto").with(user("daniele").password("daniele"))).andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
-	}
-	
-	@Test
-	public void findAllTest() throws Exception {
-
-		mockMvc.perform(get("/prodotto/findAll")).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
-	}
-	
-	@Test
-	public void findByCategoriaTest() throws Exception {
-
-		mockMvc.perform(get("/prodotto/findByCategoria/alimenti")).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andDo(print());
-	}
-	
-	
-	
-	
 }
