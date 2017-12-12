@@ -1,9 +1,7 @@
 package it.dstech.models;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,38 +18,34 @@ public class Prodotto {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	private String nome;
-	
+
 	private String marca;
-	
+
 	private String dataDiScadenza;
-	
+
 	private Categoria categoria;
-	
+
 	private double quantitaDisponibile;
 
 	private double quantitaDaAcquistare;
-	
+
 	private Unita unita;
-	
+
 	private double prezzoUnitario;
 
 	private double prezzoSenzaIva;
 
 	private double prezzoIvato;
-	
+
 	private String img;
-	
+
 	private int offerta;
-	
-	
+
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-		      name="USER_PROD",
-		      joinColumns=@JoinColumn(name="PROD_ID", referencedColumnName="ID"),
-		      inverseJoinColumns=@JoinColumn(name="USER_ID", referencedColumnName="ID"))
+	@JoinTable(name = "USER_PROD", joinColumns = @JoinColumn(name = "PROD_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
 	private List<User> listaUser;
 
 	public Prodotto() {
@@ -81,7 +75,6 @@ public class Prodotto {
 	public void setMarca(String marca) {
 		this.marca = marca;
 	}
-
 
 	public String getDataDiScadenza() {
 		return dataDiScadenza;
@@ -173,11 +166,10 @@ public class Prodotto {
 
 	@Override
 	public String toString() {
-		return "Prodotto [id=" + id + ", nome=" + nome + ", marca=" + marca + ", dataDiScadenza=" + dataDiScadenza
-				+ ", categoria=" + categoria + ", quantitaDisponibile=" + quantitaDisponibile
-				+ ", quantitaDaAcquistare=" + quantitaDaAcquistare + ", unita=" + unita + ", prezzoUnitario="
-				+ prezzoUnitario + ", prezzoSenzaIva=" + prezzoSenzaIva + ", prezzoIvato=" + prezzoIvato + ", img="
-				+ img + ", offerta=" + offerta + ", listaUser=" + listaUser + "]";
+		return "Prodotto [nome=" + nome + ", marca=" + marca + ", dataDiScadenza=" + dataDiScadenza + ", categoria="
+				+ categoria + ", quantitaDisponibile=" + quantitaDisponibile + ", quantitaDaAcquistare="
+				+ quantitaDaAcquistare + ", unita=" + unita + ", prezzoUnitario=" + prezzoUnitario + ", prezzoSenzaIva="
+				+ prezzoSenzaIva + ", prezzoIvato=" + prezzoIvato + ", img=" + img + ", offerta=" + offerta + "]";
 	}
 
 	public Prodotto(String nome, String marca, String dataDiScadenza, Categoria categoria, double quantitaDisponibile,
@@ -192,18 +184,9 @@ public class Prodotto {
 		this.unita = unita;
 		this.prezzoUnitario = prezzoUnitario;
 		this.prezzoSenzaIva = prezzoSenzaIva;
-		this.prezzoIvato = prezzoIvato ;
+		this.prezzoIvato = prezzoIvato;
 		this.img = img;
 		this.offerta = offerta;
 	}
 
-	private double calcoloPrezzoSenzaIva() {
-		
-		double prezzoSenzaIva=(prezzoIvato - ((prezzoIvato * 22 )/ 100));
-		return prezzoSenzaIva;
-		
-	}
-	
-	
-	
 }

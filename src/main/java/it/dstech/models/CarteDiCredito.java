@@ -1,7 +1,5 @@
 package it.dstech.models;
 
-import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,10 +22,9 @@ public class CarteDiCredito {
 
 	private String ccv;
 
-
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name = "USER_ID")
 	private User user;
 
 	public CarteDiCredito() {
@@ -49,7 +46,6 @@ public class CarteDiCredito {
 		this.numero = numero;
 	}
 
-
 	public String getScadenza() {
 		return scadenza;
 	}
@@ -66,7 +62,6 @@ public class CarteDiCredito {
 		this.ccv = ccv;
 	}
 
-
 	public User getUser() {
 		return user;
 	}
@@ -77,8 +72,7 @@ public class CarteDiCredito {
 
 	@Override
 	public String toString() {
-		return "CarteDiCredito [id=" + id + ", numero=" + numero + ", scadenza=" + scadenza + ", ccv=" + ccv
-				+ ", user=" + user + "]";
+		return "CarteDiCredito [numero=" + numero + ", scadenza=" + scadenza + ", ccv=" + ccv + "]";
 	}
 
 }

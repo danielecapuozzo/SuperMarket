@@ -88,28 +88,4 @@ public class CarteDiCreditoController {
 		}
 	}
 
-	@PostMapping("/addCredito/{idCard}/{aggiungiCredito}/{cvv}")
-	public ResponseEntity<CarteDiCredito> addCredito(@PathVariable int idCard, @PathVariable double aggiungiCredito,
-			@PathVariable String cvv) {
-
-		try {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userService.findByUsername(auth.getName());
-			CarteDiCredito card = carteDiCreditoService.findById(idCard);
-
-			if (user.getCartaCredito().contains(card) && card.getCcv().equals(cvv)) {
-
-				userService.saveUser(user);
-
-				carteDiCreditoService.saveCarteDiCredito(card);
-				return new ResponseEntity<CarteDiCredito>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<CarteDiCredito>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-
-		} catch (Exception e) {
-			logger.info("Error : " + e);
-			return new ResponseEntity<CarteDiCredito>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 }
