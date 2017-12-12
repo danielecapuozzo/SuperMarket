@@ -192,11 +192,17 @@ public class Prodotto {
 		this.unita = unita;
 		this.prezzoUnitario = prezzoUnitario;
 		this.prezzoSenzaIva = prezzoSenzaIva;
-		this.prezzoIvato = prezzoIvato;
+		this.prezzoIvato = prezzoIvato ;
 		this.img = img;
 		this.offerta = offerta;
 	}
 
+	private double calcoloPrezzoSenzaIva() {
+		
+		double prezzoSenzaIva=(prezzoIvato - ((prezzoIvato * 22 )/ 100));
+		return prezzoSenzaIva;
+		
+	}
 	
 	
 	
