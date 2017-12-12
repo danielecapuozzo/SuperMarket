@@ -39,7 +39,7 @@ public class ProdottoController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CarteDiCreditoService cardService;
 
@@ -53,11 +53,11 @@ public class ProdottoController {
 	@PostMapping("/saveOrUpdateProdotto")
 	public ResponseEntity<Prodotto> saveOrUpdateProdotto(@RequestBody Prodotto prodotto) {
 		try {
-			Authentication auth= SecurityContextHolder.getContext().getAuthentication();
-		    User user = userService.findByUsername(auth.getName());
-		    userService.saveUser(user);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());
+			userService.saveUser(user);
+			prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
 			Prodotto saved = prodSer.saveOrUpdateProdotto(prodotto);
-			saved.setPrezzoSenzaIva(saved.getPrezzoIvato()-(saved.getPrezzoIvato()* 0.22));
 			logger.info("saved; " + saved);
 			return new ResponseEntity<Prodotto>(saved, HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -84,9 +84,9 @@ public class ProdottoController {
 	@DeleteMapping("/deleteProdotto/{id}")
 	public void deleteProdotto(@PathVariable int id) {
 		try {
-		    Authentication auth= SecurityContextHolder.getContext().getAuthentication();
-		    User user = userService.findByUsername(auth.getName());
-		    userService.saveUser(user);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());
+			userService.saveUser(user);
 			logger.info("delete: " + id);
 			prodSer.deleteProdotto(id);
 		} catch (Exception e) {
@@ -124,59 +124,64 @@ public class ProdottoController {
 		}
 	}
 
-	
 	@GetMapping("/findByQuantitaDisponibileGreaterThan")
 	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan() {
 		try {
 
-				List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(0);
-					
-					logger.info("Model; " + listFound);
-					return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
+			List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(0);
+
+			logger.info("Model; " + listFound);
+			return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-	@PostMapping("/addprodotto/{prodottoid}/{carta}")
-	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,@PathVariable("carta") int idCarta) {
+	@PostMapping("/addprodotto/{prodottoid}/{carta}/{quantitaDaAcquistare}")
+	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,
+			@PathVariable("carta") int idCarta,@PathVariable("quantitaDaAcquistare") double quantita) {
 		try {
+			
 			CarteDiCredito card = cardService.findById(idCarta);
-		    logger.info("Id della carta: " + idCarta);
+			logger.info("Id della carta: " + idCarta);
 			Prodotto prodotto = prodSer.findById(idProd);
-		    logger.info("Id del prodotto: " + idProd);
+			prodotto.setQuantitaDaAcquistare(quantita);
+			logger.info("Id del prodotto: " + idProd);
 			LocalDate dNow = LocalDate.now();
-		    logger.info("Anno: " + dNow);
-		    //-----
-		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-		    logger.info("Formatter: " + formatter);
-		    String date = card.getScadenza();
-		    logger.info("Date: " + date);
-		    YearMonth scadenzaMese = YearMonth.parse(date, formatter);
-		    logger.info("ScadenzaMese: " + scadenzaMese);
-		    LocalDate scadenza = scadenzaMese.atEndOfMonth();
-		    logger.info("Scadenza: " + scadenza);
+			logger.info("Anno: " + dNow);
+			// -----
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+			logger.info("Formatter: " + formatter);
+			String date = card.getScadenza();
+			logger.info("Date: " + date);
+			YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+			logger.info("ScadenzaMese: " + scadenzaMese);
+			LocalDate scadenza = scadenzaMese.atEndOfMonth();
+			logger.info("Scadenza: " + scadenza);
 
-		    //-----
-		    logger.info("If 1: " + prodotto.getQuantitaDisponibile());
-		    logger.info("If 2" + dNow.isBefore(scadenza));
-			if(prodotto.getQuantitaDisponibile()>0 && dNow.isBefore(scadenza)) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userService.findByUsername(auth.getName());			
-			user.getListaProdotti().add(prodSer.findById(idProd));
-			user.setListaProdotti(user.getListaProdotti());
-			logger.info("Lista prodotti user: " + user.getListaProdotti());
-			logger.info("Lista prodotti user: " + prodSer.findById(idProd));			
-			prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile()-1);
-			prodSer.saveOrUpdateProdotto(prodotto);
-			userService.saveUser(user);
-			//------
-			cardService.saveCarteDiCredito(card);
-			//---------
-			return new ResponseEntity<User>(HttpStatus.OK);
-			}else {
-			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+			// -----
+			logger.info("If 1: " + prodotto.getQuantitaDisponibile());
+			logger.info("If 2" + dNow.isBefore(scadenza));
+			if (prodotto.getQuantitaDisponibile() > 0
+					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()
+					&& dNow.isBefore(scadenza)) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				User user = userService.findByUsername(auth.getName());
+				for(int i=0; i<prodotto.getQuantitaDaAcquistare();i++) 
+				user.getListaProdotti().add(prodSer.findById(idProd));
+				user.setListaProdotti(user.getListaProdotti());
+				logger.info("Lista prodotti user: " + user.getListaProdotti());
+				logger.info("Lista prodotti user: " + prodSer.findById(idProd));
+				prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
+				prodSer.saveOrUpdateProdotto(prodotto);
+				userService.saveUser(user);
+				// ------
+				cardService.saveCarteDiCredito(card);
+				// ---------
+				return new ResponseEntity<User>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {
 			logger.error("Errore " + e);
