@@ -78,7 +78,7 @@ public class SuperMarketApplicationTests {
 					
 		LocalDate localDate = LocalDate.of(2017,04,28);
 
-		Prodotto prodotto = new Prodotto("pollo","aia", localDate ,categoria, 10, 1, unita,220,210,224,"img", 217);
+		Prodotto prodotto = new Prodotto("pollo","aia", "27/10/2018" ,categoria, 10, 1, unita,220,210,224,"img", 217);
 
 		lista.add(prodotto);
 		

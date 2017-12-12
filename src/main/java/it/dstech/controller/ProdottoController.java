@@ -1,5 +1,9 @@
 package it.dstech.controller;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.dstech.models.CarteDiCredito;
 import it.dstech.models.Categoria;
 import it.dstech.models.Prodotto;
 import it.dstech.models.User;
+import it.dstech.services.CarteDiCreditoService;
 import it.dstech.services.ProdottoService;
+import it.dstech.services.ProdottoServiceImpl;
 import it.dstech.services.UserService;
 
 @RestController
@@ -32,6 +39,9 @@ public class ProdottoController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CarteDiCreditoService cardService;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -113,23 +123,53 @@ public class ProdottoController {
 		}
 	}
 
-	@GetMapping("/findByQuantitaDisponibileGreaterThan/{quantitaDisponibile}")
-	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan(
-			@PathVariable double quantitaDisponibile) {
+	
+	@GetMapping("/findByQuantitaDisponibileGreaterThan")
+	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan() {
 		try {
-			if (quantitaDisponibile != 0) {
 
-				List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(quantitaDisponibile);
-				if (listFound != null) {
+				List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(0);
+					
 					logger.info("Model; " + listFound);
 					return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
-				} else
-					return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
-			} else
-				return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
 
 		} catch (Exception e) {
 			return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PostMapping("/addprodotto/{prodottoid}/{carta}")
+	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,@PathVariable("carta") int idCarta) {
+		try {
+			CarteDiCredito card = cardService.findById(idCarta);
+			Prodotto prodotto = prodSer.findById(idProd);
+			LocalDate dNow = LocalDate.now();
+		    logger.info("anno" + dNow);
+		    //-----
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+		    String date = card.getScadenza();
+		    YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+		    LocalDate scadenza = scadenzaMese.atEndOfMonth();
+		    //-----
+		    logger.info("anno" + scadenza);
+		    logger.info("prova" + dNow.isBefore(scadenza));
+			if(prodotto.getQuantitaDisponibile()>0 && dNow.isBefore(scadenza)) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());			
+			user.getListaProdotti().add(prodSer.findById(idProd));
+			userService.saveUser(user);
+			prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile()-1);
+			prodSer.saveOrUpdateProdotto(prodotto);
+			//------
+			cardService.saveCarteDiCredito(card);
+			//---------
+			return new ResponseEntity<User>(HttpStatus.OK);
+			}else {
+			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			logger.error("Errore " + e);
+			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
