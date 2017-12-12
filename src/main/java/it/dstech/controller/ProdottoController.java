@@ -3,6 +3,7 @@ package it.dstech.controller;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import it.dstech.models.Prodotto;
 import it.dstech.models.User;
 import it.dstech.services.CarteDiCreditoService;
 import it.dstech.services.ProdottoService;
+import it.dstech.services.ProdottoServiceImpl;
 import it.dstech.services.UserService;
 
 @RestController
@@ -37,7 +39,7 @@ public class ProdottoController {
 
 	@Autowired
 	private UserService userService;
-
+	
 	@Autowired
 	private CarteDiCreditoService cardService;
 
@@ -121,20 +123,15 @@ public class ProdottoController {
 		}
 	}
 
-	@GetMapping("/findByQuantitaDisponibileGreaterThan/{quantitaDisponibile}")
-	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan(
-			@PathVariable double quantitaDisponibile) {
+	
+	@GetMapping("/findByQuantitaDisponibileGreaterThan")
+	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan() {
 		try {
-			if (quantitaDisponibile != 0) {
 
-				List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(quantitaDisponibile);
-				if (listFound != null) {
+				List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(0);
+					
 					logger.info("Model; " + listFound);
 					return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
-				} else
-					return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
-			} else
-				return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
 
 		} catch (Exception e) {
 			return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
@@ -150,8 +147,8 @@ public class ProdottoController {
 		    logger.info("anno" + dNow);
 		    //-----
 		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-		    LocalDate date = card.getScadenza();
-		    YearMonth scadenzaMese = YearMonth.of(date.getYear(), date.getMonth());
+		    String date = card.getScadenza();
+		    YearMonth scadenzaMese = YearMonth.parse(date, formatter);
 		    LocalDate scadenza = scadenzaMese.atEndOfMonth();
 		    //-----
 		    logger.info("anno" + scadenza);
@@ -164,8 +161,6 @@ public class ProdottoController {
 			prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile()-1);
 			prodSer.saveOrUpdateProdotto(prodotto);
 			//------
-			double credito = card.getCredito();
-			card.setCredito(credito-prodotto.getPrezzoIvato());
 			cardService.saveCarteDiCredito(card);
 			//---------
 			return new ResponseEntity<User>(HttpStatus.OK);
@@ -177,5 +172,5 @@ public class ProdottoController {
 			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 }
