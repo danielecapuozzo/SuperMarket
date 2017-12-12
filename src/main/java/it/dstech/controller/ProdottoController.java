@@ -172,5 +172,4 @@ public class ProdottoController {
 			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 }

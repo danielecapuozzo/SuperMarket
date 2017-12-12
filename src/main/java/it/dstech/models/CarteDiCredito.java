@@ -20,11 +20,10 @@ public class CarteDiCredito {
 
 	private String numero;
 
-	private LocalDate scadenza;
+	private String scadenza;
 
 	private String ccv;
 
-	private double credito;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -50,11 +49,12 @@ public class CarteDiCredito {
 		this.numero = numero;
 	}
 
-	public LocalDate getScadenza() {
+
+	public String getScadenza() {
 		return scadenza;
 	}
 
-	public void setScadenza(LocalDate scadenza) {
+	public void setScadenza(String scadenza) {
 		this.scadenza = scadenza;
 	}
 
@@ -66,13 +66,6 @@ public class CarteDiCredito {
 		this.ccv = ccv;
 	}
 
-	public double getCredito() {
-		return credito;
-	}
-
-	public void setCredito(double credito) {
-		this.credito = credito;
-	}
 
 	public User getUser() {
 		return user;
@@ -85,8 +78,7 @@ public class CarteDiCredito {
 	@Override
 	public String toString() {
 		return "CarteDiCredito [id=" + id + ", numero=" + numero + ", scadenza=" + scadenza + ", ccv=" + ccv
-				+ ", credito=" + credito + ", user=" + user + "]";
+				+ ", user=" + user + "]";
 	}
 
 }
-

@@ -20,8 +20,6 @@ public class User {
 
 	private String password;
 
-	private RoleUser role;
-
 	private TipoUtente tipo;
 
 	private String tel;
@@ -29,10 +27,9 @@ public class User {
 	private String via;
 
 	private String cap;
-	
+
 	private UserProfileType profileType;
 
-	
 	public UserProfileType getProfileType() {
 		return profileType;
 	}
@@ -54,7 +51,7 @@ public class User {
 	private List<Prodotto> listaProdotti;
 
 	@JsonIgnore
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy = "user")
 	private List<CarteDiCredito> carteDiCredito;
 
 	public User() {
@@ -84,14 +81,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public RoleUser getRole() {
-		return role;
-	}
-
-	public void setRole(RoleUser role) {
-		this.role = role;
 	}
 
 	public TipoUtente getTipo() {
@@ -144,8 +133,20 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", tipo="
-				+ tipo + ", tel=" + tel + ", via=" + via + ", cap=" + cap + ", listaProdotti=" + listaProdotti
-				+ ", carteDiCredito=" + carteDiCredito + "]";
+		return "User [username=" + username + ", password=" + password + ", tipo=" + tipo + ", tel=" + tel + ", via="
+				+ via + ", cap=" + cap + ", profileType=" + profileType + "]";
 	}
+
+	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
+			UserProfileType profileType) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.tipo = tipo;
+		this.tel = tel;
+		this.via = via;
+		this.cap = cap;
+		this.profileType = profileType;
+	}
+
 }

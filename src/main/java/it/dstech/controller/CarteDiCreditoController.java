@@ -76,12 +76,11 @@ public class CarteDiCreditoController {
 		}
 	}
 
-	@GetMapping("/findById")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<CarteDiCredito> findById(@PathVariable int id) {
 
 		try {
 			CarteDiCredito card = carteDiCreditoService.findById(id);
-			logger.info(card + "found by " + id);
 			return new ResponseEntity<CarteDiCredito>(card, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("Error : " + e);
@@ -101,8 +100,6 @@ public class CarteDiCreditoController {
 			if (user.getCartaCredito().contains(card) && card.getCcv().equals(cvv)) {
 
 				userService.saveUser(user);
-				double newCredito = (card.getCredito() + aggiungiCredito);
-				card.setCredito(newCredito);
 
 				carteDiCreditoService.saveCarteDiCredito(card);
 				return new ResponseEntity<CarteDiCredito>(HttpStatus.OK);

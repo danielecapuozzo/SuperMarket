@@ -25,7 +25,7 @@ public class Prodotto {
 	
 	private String marca;
 	
-	private LocalDate dataDiScadenza;
+	private String dataDiScadenza;
 	
 	private Categoria categoria;
 	
@@ -82,11 +82,12 @@ public class Prodotto {
 		this.marca = marca;
 	}
 
-	public LocalDate getDataDiScadenza() {
+
+	public String getDataDiScadenza() {
 		return dataDiScadenza;
 	}
 
-	public void setDataDiScadenza(LocalDate dataDiScadenza) {
+	public void setDataDiScadenza(String dataDiScadenza) {
 		this.dataDiScadenza = dataDiScadenza;
 	}
 
@@ -179,10 +180,9 @@ public class Prodotto {
 				+ img + ", offerta=" + offerta + ", listaUser=" + listaUser + "]";
 	}
 
-	public Prodotto(String nome, String marca, LocalDate dataDiScadenza, Categoria categoria,
-			double quantitaDisponibile, double quantitaDaAcquistare, Unita unita, double prezzoUnitario,
-			double prezzoSenzaIva, double prezzoIvato, String img, int offerta) {
-		super();
+	public Prodotto(String nome, String marca, String dataDiScadenza, Categoria categoria, double quantitaDisponibile,
+			double quantitaDaAcquistare, Unita unita, double prezzoUnitario, double prezzoSenzaIva, double prezzoIvato,
+			String img, int offerta) {
 		this.nome = nome;
 		this.marca = marca;
 		this.dataDiScadenza = dataDiScadenza;
@@ -192,11 +192,18 @@ public class Prodotto {
 		this.unita = unita;
 		this.prezzoUnitario = prezzoUnitario;
 		this.prezzoSenzaIva = prezzoSenzaIva;
-		this.prezzoIvato = prezzoIvato;
+		this.prezzoIvato = prezzoIvato ;
 		this.img = img;
 		this.offerta = offerta;
 	}
 
+	private double calcoloPrezzoSenzaIva() {
+		
+		double prezzoSenzaIva=(prezzoIvato - ((prezzoIvato * 22 )/ 100));
+		return prezzoSenzaIva;
+		
+	}
+	
 	
 	
 }
