@@ -3,9 +3,7 @@ package it.dstech.controller;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import it.dstech.models.CarteDiCredito;
 import it.dstech.models.Categoria;
 import it.dstech.models.Prodotto;
 import it.dstech.models.User;
 import it.dstech.services.CarteDiCreditoService;
 import it.dstech.services.ProdottoService;
-import it.dstech.services.ProdottoServiceImpl;
 import it.dstech.services.UserService;
 
 @RestController
@@ -139,10 +135,10 @@ public class ProdottoController {
 	}
 
 	@PostMapping("/addprodotto/{prodottoid}/{carta}/{quantitaDaAcquistare}")
-	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,
-			@PathVariable("carta") int idCarta,@PathVariable("quantitaDaAcquistare") double quantita) {
+	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd, @PathVariable("carta") int idCarta,
+			@PathVariable("quantitaDaAcquistare") double quantita) {
 		try {
-			
+
 			CarteDiCredito card = cardService.findById(idCarta);
 			logger.info("Id della carta: " + idCarta);
 			Prodotto prodotto = prodSer.findById(idProd);
@@ -150,6 +146,7 @@ public class ProdottoController {
 			logger.info("Id del prodotto: " + idProd);
 			LocalDate dNow = LocalDate.now();
 			logger.info("Anno: " + dNow);
+
 			// -----
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
 			logger.info("Formatter: " + formatter);
@@ -159,8 +156,23 @@ public class ProdottoController {
 			logger.info("ScadenzaMese: " + scadenzaMese);
 			LocalDate scadenza = scadenzaMese.atEndOfMonth();
 			logger.info("Scadenza: " + scadenza);
+			// -----
 
 			// -----
+			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("DD/MM/yy");
+			logger.info("Formatter: " + formatter2);
+			String date2 = prodotto.getDataDiScadenza();
+			logger.info("Date: " + date2);
+			YearMonth scadenzaMese2 = YearMonth.parse(date2, formatter);
+			logger.info("ScadenzaMese: " + scadenzaMese2);
+			LocalDate scadenza2 = scadenzaMese2.atEndOfMonth();
+			logger.info("Scadenza: " + scadenza2);
+			if (dNow.isBefore(scadenza2)) {
+				prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
+				logger.info("offerta" + prodotto.getOfferta());
+			}
+			// -----
+
 			logger.info("If 1: " + prodotto.getQuantitaDisponibile());
 			logger.info("If 2" + dNow.isBefore(scadenza));
 			if (prodotto.getQuantitaDisponibile() > 0
@@ -168,8 +180,8 @@ public class ProdottoController {
 					&& dNow.isBefore(scadenza)) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				User user = userService.findByUsername(auth.getName());
-				for(int i=0; i<prodotto.getQuantitaDaAcquistare();i++) 
-				user.getListaProdotti().add(prodSer.findById(idProd));
+				for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
+					user.getListaProdotti().add(prodSer.findById(idProd));
 				user.setListaProdotti(user.getListaProdotti());
 				logger.info("Lista prodotti user: " + user.getListaProdotti());
 				logger.info("Lista prodotti user: " + prodSer.findById(idProd));

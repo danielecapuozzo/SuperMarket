@@ -3,14 +3,9 @@ package it.dstech.models;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Prodotto {
@@ -41,8 +36,9 @@ public class Prodotto {
 
 	private String img;
 
-	private int offerta;
-	@ManyToMany(mappedBy="listaProdotti")
+	private double offerta;
+
+	@ManyToMany(mappedBy = "listaProdotti")
 	private List<User> listaUser;
 
 	public Prodotto() {
@@ -145,11 +141,11 @@ public class Prodotto {
 		this.img = img;
 	}
 
-	public int getOfferta() {
+	public double getOfferta() {
 		return offerta;
 	}
 
-	public void setOfferta(int offerta) {
+	public void setOfferta(double offerta) {
 		this.offerta = offerta;
 	}
 
@@ -171,7 +167,7 @@ public class Prodotto {
 
 	public Prodotto(String nome, String marca, String dataDiScadenza, Categoria categoria, double quantitaDisponibile,
 			double quantitaDaAcquistare, Unita unita, double prezzoUnitario, double prezzoSenzaIva, double prezzoIvato,
-			String img, int offerta) {
+			String img, double offerta) {
 		this.nome = nome;
 		this.marca = marca;
 		this.dataDiScadenza = dataDiScadenza;
