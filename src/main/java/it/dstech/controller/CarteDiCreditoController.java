@@ -100,8 +100,6 @@ public class CarteDiCreditoController {
 			if (user.getCartaCredito().contains(card) && card.getCcv().equals(cvv)) {
 
 				userService.saveUser(user);
-				double newCredito = (card.getCredito() + aggiungiCredito);
-				card.setCredito(newCredito);
 
 				carteDiCreditoService.saveCarteDiCredito(card);
 				return new ResponseEntity<CarteDiCredito>(HttpStatus.OK);

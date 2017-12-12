@@ -13,13 +13,14 @@ public interface ProdottoService {
 	
 	List<Prodotto> findByCategoria(Categoria categoria);
 	
-//	List<Prodotto> findAllDisponibili();
-	List<Prodotto> 	 findByQuantitaDisponibileGreaterThan(double quantitaDisponibile);
-
+	List<Prodotto> findByQuantitaDisponibileGreaterThan(double quantita);
 	
 	void deleteProdotto(int id);
 	
 	public Prodotto findById(int id);
+	
+	
+
 	
 	
 }
