@@ -42,10 +42,7 @@ public class Prodotto {
 	private String img;
 
 	private int offerta;
-
-	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_PROD", joinColumns = @JoinColumn(name = "PROD_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
+	@ManyToMany(mappedBy="listaProdotti")
 	private List<User> listaUser;
 
 	public Prodotto() {

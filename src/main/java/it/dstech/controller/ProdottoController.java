@@ -57,6 +57,7 @@ public class ProdottoController {
 		    User user = userService.findByUsername(auth.getName());
 		    userService.saveUser(user);
 			Prodotto saved = prodSer.saveOrUpdateProdotto(prodotto);
+			saved.setPrezzoSenzaIva(saved.getPrezzoIvato()-(saved.getPrezzoIvato()* 0.22));
 			logger.info("saved; " + saved);
 			return new ResponseEntity<Prodotto>(saved, HttpStatus.CREATED);
 		} catch (Exception e) {

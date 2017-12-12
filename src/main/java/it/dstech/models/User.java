@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,7 +33,12 @@ public class User {
 	private UserProfileType profileType;
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy = "listaUser")
+	@ManyToMany
+	@JoinTable(
+		      name="USER_PRODJ",
+		      joinColumns= @JoinColumn (name="USERJ_ID", referencedColumnName="ID"),
+		      inverseJoinColumns=@JoinColumn(name="PRODJ_ID", referencedColumnName="ID")
+		      )
 	private List<Prodotto> listaProdotti;
 	
 	@JsonIgnore
