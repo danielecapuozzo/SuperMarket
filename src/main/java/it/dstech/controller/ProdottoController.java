@@ -142,24 +142,34 @@ public class ProdottoController {
 	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,@PathVariable("carta") int idCarta) {
 		try {
 			CarteDiCredito card = cardService.findById(idCarta);
+		    logger.info("Id della carta: " + idCarta);
 			Prodotto prodotto = prodSer.findById(idProd);
+		    logger.info("Id del prodotto: " + idProd);
 			LocalDate dNow = LocalDate.now();
-		    logger.info("anno" + dNow);
+		    logger.info("Anno: " + dNow);
 		    //-----
 		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+		    logger.info("Formatter: " + formatter);
 		    String date = card.getScadenza();
+		    logger.info("Date: " + date);
 		    YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+		    logger.info("ScadenzaMese: " + scadenzaMese);
 		    LocalDate scadenza = scadenzaMese.atEndOfMonth();
+		    logger.info("Scadenza: " + scadenza);
+
 		    //-----
-		    logger.info("anno" + scadenza);
-		    logger.info("prova" + dNow.isBefore(scadenza));
+		    logger.info("If 1: " + prodotto.getQuantitaDisponibile());
+		    logger.info("If 2" + dNow.isBefore(scadenza));
 			if(prodotto.getQuantitaDisponibile()>0 && dNow.isBefore(scadenza)) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());			
 			user.getListaProdotti().add(prodSer.findById(idProd));
-			userService.saveUser(user);
+			user.setListaProdotti(user.getListaProdotti());
+			logger.info("Lista prodotti user: " + user.getListaProdotti());
+			logger.info("Lista prodotti user: " + prodSer.findById(idProd));			
 			prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile()-1);
 			prodSer.saveOrUpdateProdotto(prodotto);
+			userService.saveUser(user);
 			//------
 			cardService.saveCarteDiCredito(card);
 			//---------

@@ -29,7 +29,32 @@ public class User {
 	private String cap;
 
 	private UserProfileType profileType;
-
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "listaUser")
+	private List<Prodotto> listaProdotti;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private List<CarteDiCredito> carteDiCredito;
+	
+	public User() {
+		
+	}
+	
+	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
+			UserProfileType profileType) {
+		this.listaProdotti = new ArrayList<>();
+		this.carteDiCredito = new ArrayList<>();
+		this.username = username;
+		this.password = password;
+		this.tipo = tipo;
+		this.tel = tel;
+		this.via = via;
+		this.cap = cap;
+		this.profileType = profileType;
+	}
+	
 	public UserProfileType getProfileType() {
 		return profileType;
 	}
@@ -46,18 +71,6 @@ public class User {
 		this.carteDiCredito = carteDiCredito;
 	}
 
-	@JsonIgnore
-	@ManyToMany(mappedBy = "listaUser")
-	private List<Prodotto> listaProdotti;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private List<CarteDiCredito> carteDiCredito;
-
-	public User() {
-		this.listaProdotti = new ArrayList<>();
-		this.carteDiCredito = new ArrayList<>();
-	}
 
 	public int getId() {
 		return id;
@@ -137,16 +150,5 @@ public class User {
 				+ via + ", cap=" + cap + ", profileType=" + profileType + "]";
 	}
 
-	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
-			UserProfileType profileType) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.tipo = tipo;
-		this.tel = tel;
-		this.via = via;
-		this.cap = cap;
-		this.profileType = profileType;
-	}
 
 }
