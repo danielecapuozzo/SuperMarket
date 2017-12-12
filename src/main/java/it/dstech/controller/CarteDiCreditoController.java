@@ -1,5 +1,6 @@
 package it.dstech.controller;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class CarteDiCreditoController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			carteDiCredito.setUser(user);
+			String num = carteDiCredito.getNumero();
+			String encodedString = Base64.getEncoder().encodeToString(num.getBytes());
+			carteDiCredito.setNumero(encodedString);
 			CarteDiCredito saved = carteDiCreditoService.saveCarteDiCredito(carteDiCredito);
 			logger.info("Saved: " + saved);
 			return new ResponseEntity<CarteDiCredito>(saved, HttpStatus.CREATED);
