@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.dstech.models.History;
-import it.dstech.models.Prodotto;
 import it.dstech.services.HistoryService;
 
 @RestController
