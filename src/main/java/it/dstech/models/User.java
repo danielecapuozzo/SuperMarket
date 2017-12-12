@@ -33,6 +33,11 @@ public class User {
 	private UserProfileType profileType;
 	
 	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private List<History> listaHistory;
+	
+
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		      name="USER_PRODJ",
@@ -149,6 +154,14 @@ public class User {
 
 	public void setCartaCredito(List<CarteDiCredito> cartaCredito) {
 		this.carteDiCredito = cartaCredito;
+	}
+
+	public List<History> getListaHistory() {
+		return listaHistory;
+	}
+
+	public void setListaHistory(List<History> listaHistory) {
+		this.listaHistory = listaHistory;
 	}
 
 	@Override
