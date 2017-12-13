@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ public class ProdottoController {
 	private HistoryService historyService;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	private Random random = new Random();
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -130,8 +133,20 @@ public class ProdottoController {
 		try {
 
 			List<Prodotto> listFound = prodSer.findByQuantitaDisponibileGreaterThan(0);
-
 			logger.info("Model; " + listFound);
+
+			for (int a = 0; a < 5; a++) {
+
+				int index = random.nextInt(listFound.size());
+				logger.info("index" + index);
+
+				Prodotto prodotto = listFound.get(index);
+				logger.info("prodotto" + prodotto);
+				prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
+				logger.info("offerta" + prodotto.getOfferta());
+
+			}
+
 			return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
 
 		} catch (Exception e) {

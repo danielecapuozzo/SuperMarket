@@ -31,29 +31,24 @@ public class User {
 	private String cap;
 
 	private UserProfileType profileType;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<History> listaHistory;
-	
 
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(
-		      name="USER_PRODJ",
-		      joinColumns= @JoinColumn (name="USERJ_ID", referencedColumnName="ID"),
-		      inverseJoinColumns=@JoinColumn(name="PRODJ_ID", referencedColumnName="ID")
-		      )
+	@JoinTable(name = "USER_PRODJ", joinColumns = @JoinColumn(name = "USERJ_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PRODJ_ID", referencedColumnName = "ID"))
 	private List<Prodotto> listaProdotti;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<CarteDiCredito> carteDiCredito;
-	
+
 	public User() {
-		
+
 	}
-	
+
 	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
 			UserProfileType profileType) {
 		this.listaProdotti = new ArrayList<>();
@@ -66,7 +61,7 @@ public class User {
 		this.cap = cap;
 		this.profileType = profileType;
 	}
-	
+
 	public UserProfileType getProfileType() {
 		return profileType;
 	}
@@ -82,7 +77,6 @@ public class User {
 	public void setCarteDiCredito(List<CarteDiCredito> carteDiCredito) {
 		this.carteDiCredito = carteDiCredito;
 	}
-
 
 	public int getId() {
 		return id;
@@ -169,6 +163,5 @@ public class User {
 		return "User [username=" + username + ", password=" + password + ", tipo=" + tipo + ", tel=" + tel + ", via="
 				+ via + ", cap=" + cap + ", profileType=" + profileType + "]";
 	}
-
 
 }
