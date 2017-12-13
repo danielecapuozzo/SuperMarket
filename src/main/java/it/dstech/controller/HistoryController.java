@@ -35,7 +35,6 @@ public class HistoryController {
 		try {
 			List<History> listaHistory = historyService.findAll();
 			if (!listaHistory.isEmpty()) {
-				logger.info("lista; ");
 				return new ResponseEntity<List<History>>(listaHistory, HttpStatus.OK);
 			} else
 				return new ResponseEntity<List<History>>(HttpStatus.NOT_FOUND);
