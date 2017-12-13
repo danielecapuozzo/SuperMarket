@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import it.dstech.models.CarteDiCredito;
 import it.dstech.models.Categoria;
+import it.dstech.models.History;
 import it.dstech.models.Prodotto;
 import it.dstech.models.User;
 import it.dstech.services.CarteDiCreditoService;
+import it.dstech.services.HistoryService;
 import it.dstech.services.ProdottoService;
 import it.dstech.services.UserService;
 
@@ -38,6 +40,9 @@ public class ProdottoController {
 
 	@Autowired
 	private CarteDiCreditoService cardService;
+
+	@Autowired
+	private HistoryService historyService;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -159,18 +164,21 @@ public class ProdottoController {
 			// -----
 
 			// -----
-			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("DD/MM/yy");
+			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("DD/MM/yyyy");
 			logger.info("Formatter: " + formatter2);
 			String date2 = prodotto.getDataDiScadenza();
 			logger.info("Date: " + date2);
-			YearMonth scadenzaMese2 = YearMonth.parse(date2, formatter);
+			YearMonth scadenzaMese2 = YearMonth.parse(date2, formatter2);
 			logger.info("ScadenzaMese: " + scadenzaMese2);
 			LocalDate scadenza2 = scadenzaMese2.atEndOfMonth();
 			logger.info("Scadenza: " + scadenza2);
-			if (dNow.isBefore(scadenza2)) {
+
+			if (dNow.compareTo(scadenza2) > 0) {
 				prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
 				logger.info("offerta" + prodotto.getOfferta());
 			}
+			;
+
 			// -----
 
 			logger.info("If 1: " + prodotto.getQuantitaDisponibile());
@@ -187,6 +195,15 @@ public class ProdottoController {
 				logger.info("Lista prodotti user: " + prodSer.findById(idProd));
 				prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
 				prodSer.saveOrUpdateProdotto(prodotto);
+
+				History history = new History();
+				history.setNome(prodotto.getNome());
+				history.setCategoria(prodotto.getCategoria());
+				history.setMarca(prodotto.getMarca());
+				history.setPrezzoIvato(prodotto.getPrezzoIvato());
+				history.setUnita(prodotto.getUnita());
+				historyService.saveHistory(history);
+
 				userService.saveUser(user);
 				// ------
 				cardService.saveCarteDiCredito(card);

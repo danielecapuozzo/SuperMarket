@@ -8,5 +8,9 @@ import it.dstech.models.History;
 public interface HistoryService {
 	
 	List<History> findAll();
+	
+	History saveHistory (History history);
+	
+	
 
 }
