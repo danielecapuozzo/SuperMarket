@@ -31,11 +31,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.authenticationProvider(authenticationProvider());
 	}
 
+	
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.httpBasic().and().authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().antMatchers("/getusermodel").permitAll()
-				.antMatchers("/login", "/register","/prodotti/getall","/prodotti/findByid/**").permitAll().antMatchers("/creditcard/**","/prodottiacquistati").hasAnyRole("USER", "ADMIN", "DBA")
-				.anyRequest().authenticated().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		http.httpBasic().and().authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().antMatchers("/getusermodel", "/islogged","/register","/login").permitAll()
+				.antMatchers("/creditcard/**","/prodottiacquistati").hasAnyRole("USER", "ADMIN", "DBA")
+				.anyRequest().authenticated().and().logout().logoutUrl("/logoutApp").logoutRequestMatcher(new AntPathRequestMatcher("*"))
 				.permitAll().and().csrf().disable();
 	}
 
@@ -70,7 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		config.addAllowedMethod("PUT");
 		config.addAllowedMethod("POST");
 		config.addAllowedMethod("DELETE");
-
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
 	}
