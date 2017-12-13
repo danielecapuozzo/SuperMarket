@@ -163,26 +163,30 @@ public class ProdottoController {
 			logger.info("Scadenza: " + scadenza);
 			// -----
 
-			// -----
-			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("DD/MM/yyyy");
+			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			logger.info("Formatter: " + formatter2);
 			String date2 = prodotto.getDataDiScadenza();
 			logger.info("Date: " + date2);
-			YearMonth scadenzaMese2 = YearMonth.parse(date2, formatter2);
-			logger.info("ScadenzaMese: " + scadenzaMese2);
-			LocalDate scadenza2 = scadenzaMese2.atEndOfMonth();
-			logger.info("Scadenza: " + scadenza2);
 
-			if (dNow.compareTo(scadenza2) > 0) {
+			LocalDate scadenzaProdotto = LocalDate.parse(date2, formatter2);
+			logger.info("ScadenzaProdotto: " + scadenzaProdotto);
+
+			int dayProd1 = (scadenzaProdotto.getDayOfMonth() - 1);
+			int dayProd2 = (scadenzaProdotto.getDayOfMonth() - 2);
+			int monthProd = scadenzaProdotto.getMonthValue();
+			int yearProd = scadenzaProdotto.getYear();
+
+			LocalDate scadProd = LocalDate.of(yearProd, monthProd, dayProd1);
+			logger.info("scadProd: " + scadProd);
+
+			LocalDate scadProd2 = LocalDate.of(yearProd, monthProd, dayProd2);
+			logger.info("scadProd2: " + scadProd2);
+
+			if (dNow.isEqual(scadenzaProdotto) || dNow.isEqual(scadProd) || dNow.isEqual(scadProd2)) {
 				prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
 				logger.info("offerta" + prodotto.getOfferta());
 			}
-			;
 
-			// -----
-
-			logger.info("If 1: " + prodotto.getQuantitaDisponibile());
-			logger.info("If 2" + dNow.isBefore(scadenza));
 			if (prodotto.getQuantitaDisponibile() > 0
 					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()
 					&& dNow.isBefore(scadenza)) {
