@@ -154,13 +154,13 @@ public class ProdottoController {
 		}
 	}
 
-	@PostMapping("/addprodotto/{prodottoid}/{carta}/{quantitaDaAcquistare}")
-	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd, @PathVariable("carta") int idCarta,
+	@PostMapping("/addprodotto/{prodottoid}/{quantitaDaAcquistare}")
+	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd, 
 			@PathVariable("quantitaDaAcquistare") double quantita) {
 		try {
 
-			CarteDiCredito card = cardService.findById(idCarta);
-			logger.info("Id della carta: " + idCarta);
+//			CarteDiCredito card = cardService.findById(idCarta);
+//			logger.info("Id della carta: " + idCarta);
 			Prodotto prodotto = prodSer.findById(idProd);
 			prodotto.setQuantitaDaAcquistare(quantita);
 			logger.info("Id del prodotto: " + idProd);
@@ -168,15 +168,15 @@ public class ProdottoController {
 			logger.info("Anno: " + dNow);
 
 			// -----
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-			logger.info("Formatter: " + formatter);
-			String date = card.getScadenza();
-			logger.info("Date: " + date);
-			YearMonth scadenzaMese = YearMonth.parse(date, formatter);
-			logger.info("ScadenzaMese: " + scadenzaMese);
-			LocalDate scadenza = scadenzaMese.atEndOfMonth();
-			logger.info("Scadenza: " + scadenza);
-			// -----
+//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+//			logger.info("Formatter: " + formatter);
+//			String date = card.getScadenza();
+//			logger.info("Date: " + date);
+//			YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+//			logger.info("ScadenzaMese: " + scadenzaMese);
+//			LocalDate scadenza = scadenzaMese.atEndOfMonth();
+//			logger.info("Scadenza: " + scadenza);
+//			// -----
 
 			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			logger.info("Formatter: " + formatter2);
@@ -204,7 +204,7 @@ public class ProdottoController {
 
 			if (prodotto.getQuantitaDisponibile() > 0
 					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()
-					&& dNow.isBefore(scadenza)) {
+					) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				User user = userService.findByUsername(auth.getName());
 				for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
@@ -225,7 +225,7 @@ public class ProdottoController {
 
 				userService.saveUser(user);
 				// ------
-				cardService.saveCarteDiCredito(card);
+//				cardService.saveCarteDiCredito(card);
 				// ---------
 				return new ResponseEntity<User>(HttpStatus.OK);
 			} else {
