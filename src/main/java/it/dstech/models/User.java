@@ -5,12 +5,15 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -25,6 +28,7 @@ public class User {
 
 	private String password;
 
+	@Enumerated(EnumType.STRING)
 	private TipoUtente tipo;
 
 	private String tel;
@@ -33,6 +37,7 @@ public class User {
 
 	private String cap;
 
+	@Enumerated(EnumType.STRING)
 	private UserProfileType profileType;
 
 	@JsonIgnore

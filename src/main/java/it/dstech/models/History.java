@@ -1,6 +1,8 @@
 package it.dstech.models;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,19 +22,20 @@ public class History {
 
 	private String marca;
 
+	@Enumerated(EnumType.STRING)
 	private Categoria categoria;
 
+	@Enumerated(EnumType.STRING)
 	private Unita unita;
 
 	private double prezzoIvato;
-	
+
 	private String codOrdine;
-	
-	
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
-	private User user ;
+	private User user;
 
 	public int getId() {
 		return id;
@@ -89,7 +92,6 @@ public class History {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
 
 	public String getCodOrdine() {
 		return codOrdine;
@@ -117,9 +119,5 @@ public class History {
 		return "History [id=" + id + ", nome=" + nome + ", marca=" + marca + ", categoria=" + categoria + ", unita="
 				+ unita + ", prezzoIvato=" + prezzoIvato + ", user=" + user + "]";
 	}
-	
-	
-	
-	
 
 }

@@ -1,10 +1,10 @@
 package it.dstech.controller;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import it.dstech.models.CarteDiCredito;
+
 import it.dstech.models.Categoria;
 import it.dstech.models.History;
 import it.dstech.models.Prodotto;
@@ -153,92 +153,96 @@ public class ProdottoController {
 		}
 	}
 
-	@PostMapping("/compra/{prodottoid}/{quantitaDaAcquistare}")
-	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,
-			@PathVariable("quantitaDaAcquistare") double quantita) {
+	@PostMapping("/compra")
+	public ResponseEntity<Boolean> addProdotto(@RequestBody List<Prodotto> list) {
+		
+		boolean check = false;
 		try {
+			for (Prodotto prodotto : list) {
 
-			// CarteDiCredito card = cardService.findById(idCarta);
-			// logger.info("Id della carta: " + idCarta);
-			Prodotto prodotto = prodSer.findById(idProd);
-			prodotto.setQuantitaDaAcquistare(quantita);
-			logger.info("Id del prodotto: " + idProd);
-			LocalDate dNow = LocalDate.now();
-			logger.info("Anno: " + dNow);
+				// CarteDiCredito card = cardService.findById(idCarta);
+				// logger.info("Id della carta: " + idCarta);
+				// Prodotto prodotto = prodSer.findById(idProd);
+				// prodotto.setQuantitaDaAcquistare(quantita);
+				// logger.info("Id del prodotto: " + idProd);
+				//
 
-			// -----
-			// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-			// logger.info("Formatter: " + formatter);
-			// String date = card.getScadenza();
-			// logger.info("Date: " + date);
-			// YearMonth scadenzaMese = YearMonth.parse(date, formatter);
-			// logger.info("ScadenzaMese: " + scadenzaMese);
-			// LocalDate scadenza = scadenzaMese.atEndOfMonth();
-			// logger.info("Scadenza: " + scadenza);
-			// // -----
+				LocalDate dNow = LocalDate.now();
+				logger.info("Anno: " + dNow);
 
-			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			logger.info("Formatter: " + formatter2);
-			String date2 = prodotto.getDataDiScadenza();
-			logger.info("Date: " + date2);
+				// -----
+				// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+				// logger.info("Formatter: " + formatter);
+				// String date = card.getScadenza();
+				// logger.info("Date: " + date);
+				// YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+				// logger.info("ScadenzaMese: " + scadenzaMese);
+				// LocalDate scadenza = scadenzaMese.atEndOfMonth();
+				// logger.info("Scadenza: " + scadenza);
+				// // -----
 
-			LocalDate scadenzaProdotto = LocalDate.parse(date2, formatter2);
-			logger.info("ScadenzaProdotto: " + scadenzaProdotto);
+				DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				logger.info("Formatter: " + formatter2);
+				String date2 = prodotto.getDataDiScadenza();
+				logger.info("Date: " + date2);
 
-			int dayProd1 = (scadenzaProdotto.getDayOfMonth() - 1);
-			int dayProd2 = (scadenzaProdotto.getDayOfMonth() - 2);
-			int monthProd = scadenzaProdotto.getMonthValue();
-			int yearProd = scadenzaProdotto.getYear();
+				LocalDate scadenzaProdotto = LocalDate.parse(date2, formatter2);
+				logger.info("ScadenzaProdotto: " + scadenzaProdotto);
 
-			LocalDate scadProd = LocalDate.of(yearProd, monthProd, dayProd1);
-			logger.info("scadProd: " + scadProd);
+				int dayProd1 = (scadenzaProdotto.getDayOfMonth() - 1);
+				int dayProd2 = (scadenzaProdotto.getDayOfMonth() - 2);
+				int monthProd = scadenzaProdotto.getMonthValue();
+				int yearProd = scadenzaProdotto.getYear();
 
-			LocalDate scadProd2 = LocalDate.of(yearProd, monthProd, dayProd2);
-			logger.info("scadProd2: " + scadProd2);
+				LocalDate scadProd = LocalDate.of(yearProd, monthProd, dayProd1);
+				logger.info("scadProd: " + scadProd);
 
-			if (dNow.isEqual(scadenzaProdotto) || dNow.isEqual(scadProd) || dNow.isEqual(scadProd2)) {
-				prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
-				logger.info("offerta" + prodotto.getOfferta());
+				LocalDate scadProd2 = LocalDate.of(yearProd, monthProd, dayProd2);
+				logger.info("scadProd2: " + scadProd2);
+
+				if (dNow.isEqual(scadenzaProdotto) || dNow.isEqual(scadProd) || dNow.isEqual(scadProd2)) {
+					prodotto.setOfferta(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.40));
+					logger.info("offerta" + prodotto.getOfferta());
+				}
+
+				if (prodotto.getQuantitaDisponibile() > 0
+						&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
+					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+					User user = userService.findByUsername(auth.getName());
+					for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
+						user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
+					user.setListaProdotti(user.getListaProdotti());
+					logger.info("Lista prodotti user: " + user.getListaProdotti());
+					logger.info("Lista prodotti user: " + prodSer.findById(prodotto.getId()));
+					prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
+					prodotto.setPrezzoIvato(prodotto.getQuantitaDaAcquistare() * prodotto.getPrezzoUnitario());
+					prodotto.setQuantitaDisponibile(
+							prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
+					prodSer.saveOrUpdateProdotto(prodotto);
+
+					History history = new History();
+					history.setNome(prodotto.getNome());
+					history.setCategoria(prodotto.getCategoria());
+					history.setMarca(prodotto.getMarca());
+					history.setPrezzoIvato(prodotto.getPrezzoIvato());
+					history.setUnita(prodotto.getUnita());
+					history.setUser(user);
+					historyService.saveHistory(history);
+
+					userService.saveUser(user);
+					// ------
+					// cardService.saveCarteDiCredito(card);
+					// ---------
+					check = true;
+				} else {
+					throw new Exception();
+				}
 			}
-
-			if (prodotto.getQuantitaDisponibile() > 0
-					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				User user = userService.findByUsername(auth.getName());
-				for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
-					user.getListaProdotti().add(prodSer.findById(idProd));
-				user.setListaProdotti(user.getListaProdotti());
-				logger.info("Lista prodotti user: " + user.getListaProdotti());
-				logger.info("Lista prodotti user: " + prodSer.findById(idProd));
-				prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
-				prodotto.setPrezzoIvato(prodotto.getQuantitaDaAcquistare() * prodotto.getPrezzoUnitario());
-				prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
-				prodSer.saveOrUpdateProdotto(prodotto);
-
-				History history = new History();
-				history.setNome(prodotto.getNome());
-				history.setCategoria(prodotto.getCategoria());
-				history.setMarca(prodotto.getMarca());
-				history.setPrezzoIvato(prodotto.getPrezzoIvato());
-				history.setUnita(prodotto.getUnita());
-				history.setUser(user);
-				historyService.saveHistory(history);
-
-				userService.saveUser(user);
-				// ------
-				// cardService.saveCarteDiCredito(card);
-				// ---------
-				return new ResponseEntity<User>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			return new ResponseEntity<Boolean>(check, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Errore " + e);
-			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Boolean>(check, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
 
-	
-	
 }
