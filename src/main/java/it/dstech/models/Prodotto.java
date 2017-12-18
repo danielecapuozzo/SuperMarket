@@ -37,6 +37,7 @@ public class Prodotto {
 	private String img;
 
 	private double offerta;
+	
 
 	@ManyToMany(mappedBy = "listaProdotti")
 	private List<User> listaUser;

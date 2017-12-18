@@ -153,7 +153,7 @@ public class ProdottoController {
 		}
 	}
 
-	@PostMapping("/addprodotto/{prodottoid}/{quantitaDaAcquistare}")
+	@PostMapping("/compra/{prodottoid}/{quantitaDaAcquistare}")
 	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,
 			@PathVariable("quantitaDaAcquistare") double quantita) {
 		try {
@@ -221,6 +221,7 @@ public class ProdottoController {
 				history.setMarca(prodotto.getMarca());
 				history.setPrezzoIvato(prodotto.getPrezzoIvato());
 				history.setUnita(prodotto.getUnita());
+				history.setUser(user);
 				historyService.saveHistory(history);
 
 				userService.saveUser(user);
@@ -236,4 +237,8 @@ public class ProdottoController {
 			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+
+	
+	
 }

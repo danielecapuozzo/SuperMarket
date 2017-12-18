@@ -26,6 +26,9 @@ public class History {
 
 	private double prezzoIvato;
 	
+	private String codOrdine;
+	
+	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
@@ -85,6 +88,15 @@ public class History {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+
+	public String getCodOrdine() {
+		return codOrdine;
+	}
+
+	public void setCodOrdine(String codOrdine) {
+		this.codOrdine = codOrdine;
 	}
 
 	public History(int id, String nome, String marca, Categoria categoria, Unita unita, double prezzoIvato, User user) {
