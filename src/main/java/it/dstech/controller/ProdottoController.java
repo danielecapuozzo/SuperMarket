@@ -60,7 +60,6 @@ public class ProdottoController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			userService.saveUser(user);
-			prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
 			Prodotto saved = prodSer.saveOrUpdateProdotto(prodotto);
 			logger.info("saved; " + saved);
 			return new ResponseEntity<Prodotto>(saved, HttpStatus.CREATED);
@@ -155,12 +154,12 @@ public class ProdottoController {
 	}
 
 	@PostMapping("/addprodotto/{prodottoid}/{quantitaDaAcquistare}")
-	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd, 
+	public ResponseEntity<User> addProdotto(@PathVariable("prodottoid") int idProd,
 			@PathVariable("quantitaDaAcquistare") double quantita) {
 		try {
 
-//			CarteDiCredito card = cardService.findById(idCarta);
-//			logger.info("Id della carta: " + idCarta);
+			// CarteDiCredito card = cardService.findById(idCarta);
+			// logger.info("Id della carta: " + idCarta);
 			Prodotto prodotto = prodSer.findById(idProd);
 			prodotto.setQuantitaDaAcquistare(quantita);
 			logger.info("Id del prodotto: " + idProd);
@@ -168,15 +167,15 @@ public class ProdottoController {
 			logger.info("Anno: " + dNow);
 
 			// -----
-//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-//			logger.info("Formatter: " + formatter);
-//			String date = card.getScadenza();
-//			logger.info("Date: " + date);
-//			YearMonth scadenzaMese = YearMonth.parse(date, formatter);
-//			logger.info("ScadenzaMese: " + scadenzaMese);
-//			LocalDate scadenza = scadenzaMese.atEndOfMonth();
-//			logger.info("Scadenza: " + scadenza);
-//			// -----
+			// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+			// logger.info("Formatter: " + formatter);
+			// String date = card.getScadenza();
+			// logger.info("Date: " + date);
+			// YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+			// logger.info("ScadenzaMese: " + scadenzaMese);
+			// LocalDate scadenza = scadenzaMese.atEndOfMonth();
+			// logger.info("Scadenza: " + scadenza);
+			// // -----
 
 			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			logger.info("Formatter: " + formatter2);
@@ -203,8 +202,7 @@ public class ProdottoController {
 			}
 
 			if (prodotto.getQuantitaDisponibile() > 0
-					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()
-					) {
+					&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				User user = userService.findByUsername(auth.getName());
 				for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
@@ -212,6 +210,8 @@ public class ProdottoController {
 				user.setListaProdotti(user.getListaProdotti());
 				logger.info("Lista prodotti user: " + user.getListaProdotti());
 				logger.info("Lista prodotti user: " + prodSer.findById(idProd));
+				prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
+				prodotto.setPrezzoIvato(prodotto.getQuantitaDaAcquistare() * prodotto.getPrezzoUnitario());
 				prodotto.setQuantitaDisponibile(prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
 				prodSer.saveOrUpdateProdotto(prodotto);
 
@@ -225,7 +225,7 @@ public class ProdottoController {
 
 				userService.saveUser(user);
 				// ------
-//				cardService.saveCarteDiCredito(card);
+				// cardService.saveCarteDiCredito(card);
 				// ---------
 				return new ResponseEntity<User>(HttpStatus.OK);
 			} else {
