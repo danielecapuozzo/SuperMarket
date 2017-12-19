@@ -12,5 +12,8 @@ public interface HistoryService {
 	History saveHistory(History history);
 
 	List<History> findByCod(String cod);
+	
+	List<History>  findCodByUser_id(int id);
+
 
 }

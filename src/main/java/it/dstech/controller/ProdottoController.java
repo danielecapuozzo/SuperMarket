@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import it.dstech.models.Categoria;
 import it.dstech.models.History;
 import it.dstech.models.Prodotto;
@@ -47,6 +47,9 @@ public class ProdottoController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Random random = new Random();
+	
+	LocalDate dNow = LocalDate.now();
+
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -154,7 +157,7 @@ public class ProdottoController {
 
 	@PostMapping("/compra")
 	public ResponseEntity<Boolean> addProdotto(@RequestBody List<Prodotto> list) {
-
+		
 		boolean check = false;
 		try {
 			String[] alfabeto = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S",
@@ -165,6 +168,10 @@ public class ProdottoController {
 			String num1 = numeri[random.nextInt(numeri.length)];
 			String num2 = numeri[random.nextInt(numeri.length)];
 			String ssn = char1 + char2 + num1 + num2;
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());
+			List<Prodotto> listaAcquistati=new ArrayList<Prodotto>();
+
 
 			for (Prodotto prodotto : list) {
 
@@ -175,7 +182,6 @@ public class ProdottoController {
 				// logger.info("Id del prodotto: " + idProd);
 				//
 
-				LocalDate dNow = LocalDate.now();
 				logger.info("Anno: " + dNow);
 
 				// -----
@@ -215,8 +221,7 @@ public class ProdottoController {
 
 				if (prodotto.getQuantitaDisponibile() > 0
 						&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
-					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-					User user = userService.findByUsername(auth.getName());
+				
 					for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
 						user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
 					user.setListaProdotti(user.getListaProdotti());
@@ -227,25 +232,7 @@ public class ProdottoController {
 					prodotto.setQuantitaDisponibile(
 							prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
 					prodSer.saveOrUpdateProdotto(prodotto);
-
-					History history = new History();
-
-					LocalTime time = LocalTime.now();
-					int hour = time.getHour();
-					int minute = time.getMinute();
-					LocalTime time2 = LocalTime.of(hour, minute);
-					String dataOrdine = dNow + "_" + time2;
-
-					history.setNome(prodotto.getNome());
-					history.setCategoria(prodotto.getCategoria());
-					history.setMarca(prodotto.getMarca());
-					history.setPrezzoIvato(prodotto.getPrezzoIvato());
-					history.setUnita(prodotto.getUnita());
-					history.setUser(user);
-					history.setQuantita(prodotto.getQuantitaDaAcquistare());
-					history.setData(dataOrdine);
-					history.setCod(ssn);
-					historyService.saveHistory(history);
+					listaAcquistati.add(prodotto);
 
 					userService.saveUser(user);
 					// ------
@@ -255,7 +242,23 @@ public class ProdottoController {
 				} else {
 					throw new Exception();
 				}
+
+			
+
 			}
+			History history = new History();
+
+			LocalTime time = LocalTime.now();
+			int hour = time.getHour();
+			int minute = time.getMinute();
+			LocalTime time2 = LocalTime.of(hour, minute);
+			String dataOrdine = dNow + "_" + time2;
+			
+			history.setListaProdotti(listaAcquistati);
+			history.setUser(user);
+			history.setData(dataOrdine);
+			history.setCod(ssn);
+			historyService.saveHistory(history);
 			return new ResponseEntity<Boolean>(check, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Errore " + e);

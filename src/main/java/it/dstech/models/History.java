@@ -1,5 +1,7 @@
 package it.dstech.models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -7,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,23 +22,16 @@ public class History {
 	@GeneratedValue
 	private int id;
 
-	private String nome;
-
-	private String marca;
-
-	@Enumerated(EnumType.STRING)
-	private Categoria categoria;
-
-	@Enumerated(EnumType.STRING)
-	private Unita unita;
-
-	private double prezzoIvato;
-
 	private String cod;
-
-	private double quantita;
+	
+	private int prezzoTotale;
 
 	private String data;
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name = "HIST_PRODJ", joinColumns = @JoinColumn(name = "HIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PRODJ_ID", referencedColumnName = "ID"))
+	List<Prodotto> listaProdotti;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -49,45 +46,7 @@ public class History {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getMarca() {
-		return marca;
-	}
-
-	public void setMarca(String marca) {
-		this.marca = marca;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
-	public Unita getUnita() {
-		return unita;
-	}
-
-	public void setUnita(Unita unita) {
-		this.unita = unita;
-	}
-
-	public double getPrezzoIvato() {
-		return prezzoIvato;
-	}
-
-	public void setPrezzoIvato(double prezzoIvato) {
-		this.prezzoIvato = prezzoIvato;
-	}
+	
 
 	public User getUser() {
 		return user;
@@ -105,14 +64,6 @@ public class History {
 		this.cod = cod;
 	}
 
-	public double getQuantita() {
-		return quantita;
-	}
-
-	public void setQuantita(double quantita) {
-		this.quantita = quantita;
-	}
-
 	public String getData() {
 		return data;
 	}
@@ -121,23 +72,41 @@ public class History {
 		this.data = data;
 	}
 
-	public History(int id, String nome, String marca, Categoria categoria, Unita unita, double prezzoIvato, User user) {
-		this.id = id;
-		this.nome = nome;
-		this.marca = marca;
-		this.categoria = categoria;
-		this.unita = unita;
-		this.prezzoIvato = prezzoIvato;
-		this.user = user;
+	
+	public int getPrezzoTotale() {
+		return prezzoTotale;
+	}
+
+	public void setPrezzoTotale(int prezzoTotale) {
+		this.prezzoTotale = prezzoTotale;
+	}
+
+	public List<Prodotto> getListaProdotti() {
+		return listaProdotti;
+	}
+
+	public void setListaProdotti(List<Prodotto> listaProdotti) {
+		this.listaProdotti = listaProdotti;
 	}
 
 	public History() {
 	}
 
-	@Override
-	public String toString() {
-		return "History [id=" + id + ", nome=" + nome + ", marca=" + marca + ", categoria=" + categoria + ", unita="
-				+ unita + ", prezzoIvato=" + prezzoIvato + ", user=" + user + "]";
+	public History(int id, String cod, int prezzoTotale, String data, List<Prodotto> listaProdotti, User user) {
+		super();
+		this.id = id;
+		this.cod = cod;
+		this.prezzoTotale = prezzoTotale;
+		this.data = data;
+		this.listaProdotti = listaProdotti;
+		this.user = user;
 	}
 
+	@Override
+	public String toString() {
+		return "History [id=" + id + ", cod=" + cod + ", prezzoTotale=" + prezzoTotale + ", data=" + data
+				+ ", listaProdotti=" + listaProdotti + ", user=" + user + "]";
+	}
+
+	
 }

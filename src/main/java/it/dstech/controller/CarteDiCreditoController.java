@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.dstech.models.CarteDiCredito;
+import it.dstech.models.History;
 import it.dstech.models.User;
 import it.dstech.services.CarteDiCreditoService;
 import it.dstech.services.CarteDiCreditoServiceImpl;
@@ -69,11 +70,13 @@ public class CarteDiCreditoController {
 		}
 	}
 
-	@GetMapping("/findByUserId/{id}")
+	@GetMapping("/findByUserId")
 	public ResponseEntity<List<CarteDiCredito>> findByUser_Id(@PathVariable int id) {
 
-		try {
-			List<CarteDiCredito> listFound = carteDiCreditoService.findByUser_id(id);
+		try {	
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			int userid = userService.findByUsername(auth.getName()).getId();	
+			List<CarteDiCredito> listFound =carteDiCreditoService.findByUser_id(userid);
 			logger.info(listFound + "found by " + id);
 			return new ResponseEntity<List<CarteDiCredito>>(listFound, HttpStatus.OK);
 		} catch (Exception e) {

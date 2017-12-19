@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.dstech.models.CarteDiCredito;
 import it.dstech.models.History;
+import it.dstech.models.Prodotto;
 import it.dstech.models.User;
 import it.dstech.services.HistoryService;
 import it.dstech.services.UserService;
@@ -75,4 +77,18 @@ public class HistoryController {
 		}
 	}
 
+	@GetMapping("/findCodByUserId")
+	public ResponseEntity<List<History>> findCodByUser_id() {
+
+		try {	
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			int userid = userService.findByUsername(auth.getName()).getId();	
+			List<History> listFound =historyService.findCodByUser_id(userid);
+			logger.info(listFound + "found by " + userid);
+			return new ResponseEntity<List<History>>(listFound, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.info("Error : " + e);
+			return new ResponseEntity<List<History>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

@@ -39,6 +39,8 @@ public class Prodotto {
 
 	private double offerta;
 	
+	@ManyToMany(mappedBy = "listaProdotti")
+	private List<History> listaHistory;
 
 	@ManyToMany(mappedBy = "listaProdotti")
 	private List<User> listaUser;
