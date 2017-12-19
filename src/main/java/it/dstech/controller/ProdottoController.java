@@ -1,6 +1,8 @@
 package it.dstech.controller;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +50,10 @@ public class ProdottoController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Random random = new Random();
+	
+	private String codice;
+	
+	private int nOrdine=0;
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -219,14 +225,23 @@ public class ProdottoController {
 					prodotto.setQuantitaDisponibile(
 							prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
 					prodSer.saveOrUpdateProdotto(prodotto);
-
+					
+					
 					History history = new History();
+				
+					LocalTime time= LocalTime.now();
+					int hour=time.getHour();
+					int minute=time.getMinute();
+					LocalTime time2=LocalTime.of(hour, minute);
+					codice=dNow + "__" + time2 ;
 					history.setNome(prodotto.getNome());
 					history.setCategoria(prodotto.getCategoria());
 					history.setMarca(prodotto.getMarca());
 					history.setPrezzoIvato(prodotto.getPrezzoIvato());
 					history.setUnita(prodotto.getUnita());
 					history.setUser(user);
+					history.setQuantita(prodotto.getQuantitaDaAcquistare());
+					history.setCodOrdine(codice);
 					historyService.saveHistory(history);
 
 					userService.saveUser(user);
