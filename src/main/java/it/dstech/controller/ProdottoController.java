@@ -50,10 +50,10 @@ public class ProdottoController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Random random = new Random();
-	
+
 	private String codice;
-	
-	private int nOrdine=0;
+
+	private int nOrdine = 0;
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -161,7 +161,7 @@ public class ProdottoController {
 
 	@PostMapping("/compra")
 	public ResponseEntity<Boolean> addProdotto(@RequestBody List<Prodotto> list) {
-		
+
 		boolean check = false;
 		try {
 			for (Prodotto prodotto : list) {
@@ -225,15 +225,24 @@ public class ProdottoController {
 					prodotto.setQuantitaDisponibile(
 							prodotto.getQuantitaDisponibile() - prodotto.getQuantitaDaAcquistare());
 					prodSer.saveOrUpdateProdotto(prodotto);
-					
-					
+
 					History history = new History();
-				
-					LocalTime time= LocalTime.now();
-					int hour=time.getHour();
-					int minute=time.getMinute();
-					LocalTime time2=LocalTime.of(hour, minute);
-					codice=dNow + "__" + time2 ;
+
+					String[] alfabeto = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q",
+							"R", "S", "T", "U", "V", "Z" };
+					String[] numeri = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+					String char1 = alfabeto[random.nextInt(alfabeto.length)];
+					String char2 = alfabeto[random.nextInt(alfabeto.length)];
+					String num1 = numeri[random.nextInt(numeri.length)];
+					String num2 = numeri[random.nextInt(numeri.length)];
+					String ssn = char1 + char2 + num1 + num2;
+
+					LocalTime time = LocalTime.now();
+					int hour = time.getHour();
+					int minute = time.getMinute();
+					LocalTime time2 = LocalTime.of(hour, minute);
+					codice = dNow + "_" + time2 + "_" + ssn;
+
 					history.setNome(prodotto.getNome());
 					history.setCategoria(prodotto.getCategoria());
 					history.setMarca(prodotto.getMarca());
