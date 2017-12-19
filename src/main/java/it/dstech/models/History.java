@@ -30,9 +30,11 @@ public class History {
 
 	private double prezzoIvato;
 
-	private String codOrdine;
-	
+	private String cod;
+
 	private double quantita;
+
+	private String data;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -95,20 +97,28 @@ public class History {
 		this.user = user;
 	}
 
-	public String getCodOrdine() {
-		return codOrdine;
+	public String getCod() {
+		return cod;
 	}
 
-	public void setCodOrdine(String codOrdine) {
-		this.codOrdine = codOrdine;
-	}	
-	
+	public void setCod(String cod) {
+		this.cod = cod;
+	}
+
 	public double getQuantita() {
 		return quantita;
 	}
 
 	public void setQuantita(double quantita) {
 		this.quantita = quantita;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	public History(int id, String nome, String marca, Categoria categoria, Unita unita, double prezzoIvato, User user) {

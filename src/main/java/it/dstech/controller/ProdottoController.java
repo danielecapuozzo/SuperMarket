@@ -42,18 +42,11 @@ public class ProdottoController {
 	private UserService userService;
 
 	@Autowired
-	private CarteDiCreditoService cardService;
-
-	@Autowired
 	private HistoryService historyService;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Random random = new Random();
-
-	private String codice;
-
-	private int nOrdine = 0;
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -164,6 +157,15 @@ public class ProdottoController {
 
 		boolean check = false;
 		try {
+			String[] alfabeto = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S",
+					"T", "U", "V", "Z" };
+			String[] numeri = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+			String char1 = alfabeto[random.nextInt(alfabeto.length)];
+			String char2 = alfabeto[random.nextInt(alfabeto.length)];
+			String num1 = numeri[random.nextInt(numeri.length)];
+			String num2 = numeri[random.nextInt(numeri.length)];
+			String ssn = char1 + char2 + num1 + num2;
+
 			for (Prodotto prodotto : list) {
 
 				// CarteDiCredito card = cardService.findById(idCarta);
@@ -228,20 +230,11 @@ public class ProdottoController {
 
 					History history = new History();
 
-					String[] alfabeto = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q",
-							"R", "S", "T", "U", "V", "Z" };
-					String[] numeri = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-					String char1 = alfabeto[random.nextInt(alfabeto.length)];
-					String char2 = alfabeto[random.nextInt(alfabeto.length)];
-					String num1 = numeri[random.nextInt(numeri.length)];
-					String num2 = numeri[random.nextInt(numeri.length)];
-					String ssn = char1 + char2 + num1 + num2;
-
 					LocalTime time = LocalTime.now();
 					int hour = time.getHour();
 					int minute = time.getMinute();
 					LocalTime time2 = LocalTime.of(hour, minute);
-					codice = dNow + "_" + time2 + "_" + ssn;
+					String dataOrdine = dNow + "_" + time2;
 
 					history.setNome(prodotto.getNome());
 					history.setCategoria(prodotto.getCategoria());
@@ -250,7 +243,8 @@ public class ProdottoController {
 					history.setUnita(prodotto.getUnita());
 					history.setUser(user);
 					history.setQuantita(prodotto.getQuantitaDaAcquistare());
-					history.setCodOrdine(codice);
+					history.setData(dataOrdine);
+					history.setCod(ssn);
 					historyService.saveHistory(history);
 
 					userService.saveUser(user);

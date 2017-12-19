@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,19 @@ public class HistoryController {
 				return new ResponseEntity<List<History>>(HttpStatus.NOT_FOUND);
 
 		} catch (Exception e) {
+			return new ResponseEntity<List<History>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/findByCod/{cod}")
+	public ResponseEntity<List<History>> findByCod(@PathVariable String cod) {
+
+		try {
+			List<History> listFound = historyService.findAll();
+			logger.info(listFound + "found by " + cod);
+			return new ResponseEntity<List<History>>(listFound, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Error : " + e);
 			return new ResponseEntity<List<History>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
