@@ -46,7 +46,10 @@ public class ProdottoServiceImpl implements ProdottoService {
 		return prodottoRepository.findByQuantitaDisponibileGreaterThan(quantita);
 	}
 	
-	
+	@Override
+	public List<Prodotto> findByNome (String nome){
+		return prodottoRepository.findByNome(nome);
+	}
 
 
 }

@@ -15,6 +15,8 @@ public interface ProdottoRepository extends CrudRepository<Prodotto, Integer> {
 	List<Prodotto> findByCategoria (Categoria categoria);
 	
 	List<Prodotto> findByQuantitaDisponibileGreaterThan(double quantita);
+	
+	List<Prodotto> findByNome (String nome);
 
 	
 }
