@@ -44,10 +44,10 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<History> listaHistory;
 
-	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "USER_PRODJ", joinColumns = @JoinColumn(name = "USERJ_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PRODJ_ID", referencedColumnName = "ID"))
-	private List<Prodotto> listaProdotti;
+//	@JsonIgnore
+//	@ManyToMany
+//	@JoinTable(name = "USER_PRODJ", joinColumns = @JoinColumn(name = "USERJ_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PRODJ_ID", referencedColumnName = "ID"))
+//	private List<Prodotto> listaProdotti;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
@@ -59,7 +59,7 @@ public class User {
 
 	public User(String username, String password, TipoUtente tipo, String tel, String via, String cap,
 			UserProfileType profileType) {
-		this.listaProdotti = new ArrayList<>();
+//		this.listaProdotti = new ArrayList<>();
 		this.carteDiCredito = new ArrayList<>();
 		this.username = username;
 		this.password = password;
@@ -142,13 +142,13 @@ public class User {
 		this.cap = cap;
 	}
 
-	public List<Prodotto> getListaProdotti() {
-		return listaProdotti;
-	}
-
-	public void setListaProdotti(List<Prodotto> listaProdotti) {
-		this.listaProdotti = listaProdotti;
-	}
+//	public List<Prodotto> getListaProdotti() {
+//		return listaProdotti;
+//	}
+//
+//	public void setListaProdotti(List<Prodotto> listaProdotti) {
+//		this.listaProdotti = listaProdotti;
+//	}
 
 	public List<CarteDiCredito> getCartaCredito() {
 		return carteDiCredito;

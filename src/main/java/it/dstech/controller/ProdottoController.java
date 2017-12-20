@@ -222,10 +222,10 @@ public class ProdottoController {
 				if (prodotto.getQuantitaDisponibile() > 0
 						&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
 				
-					for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
-						user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
-					user.setListaProdotti(user.getListaProdotti());
-					logger.info("Lista prodotti user: " + user.getListaProdotti());
+//					for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
+//						user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
+//					user.setListaProdotti(user.getListaProdotti());
+//					logger.info("Lista prodotti user: " + user.getListaProdotti());
 					logger.info("Lista prodotti user: " + prodSer.findById(prodotto.getId()));
 					prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
 					prodotto.setPrezzoIvato(prodotto.getQuantitaDaAcquistare() * prodotto.getPrezzoUnitario());

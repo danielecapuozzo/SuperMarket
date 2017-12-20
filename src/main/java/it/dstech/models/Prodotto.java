@@ -48,11 +48,11 @@ public class Prodotto {
 	@ManyToMany(mappedBy = "listaProdotti")
 	private List<History> listaHistory;
 
-	@ManyToMany(mappedBy = "listaProdotti")
-	private List<User> listaUser;
+//	@ManyToMany(mappedBy = "listaProdotti")
+//	private List<User> listaUser;
 
 	public Prodotto() {
-		this.listaUser = new ArrayList<>();
+//		this.listaUser = new ArrayList<>();
 	}
 
 	public int getId() {
@@ -159,13 +159,13 @@ public class Prodotto {
 		this.offerta = offerta;
 	}
 
-	public List<User> getListaUser() {
-		return listaUser;
-	}
-
-	public void setListaUser(List<User> listaUser) {
-		this.listaUser = listaUser;
-	}
+//	public List<User> getListaUser() {
+//		return listaUser;
+//	}
+//
+//	public void setListaUser(List<User> listaUser) {
+//		this.listaUser = listaUser;
+//	}
 
 	@Override
 	public String toString() {
