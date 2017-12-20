@@ -40,10 +40,6 @@ public class HistoryServiceImpl implements HistoryService {
 	public History findById(int id) {
 		return historyRepository.findOne(id);
 	}
-	@Override
-	public List<Prodotto>findByListaProdotti_id(int id) {
-		return historyRepository.findByListaProdotti_id( id);
-
-	}
+	
 	
 }

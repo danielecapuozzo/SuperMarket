@@ -14,7 +14,6 @@ public interface HistoryRepository extends CrudRepository<History, Integer> {
 
 	History findById(int id);
 	
-	List<Prodotto>findByListaProdotti_id(int id);
 
 	
 }

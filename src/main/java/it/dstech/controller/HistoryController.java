@@ -107,17 +107,17 @@ public class HistoryController {
 		}
 	}
 
-	@GetMapping("/findList/{id}")
-	public ResponseEntity<List<Prodotto>> findByListaProdotti_id(@PathVariable int id) {
-		try {
-			List<Prodotto> listFound0 = historyService.findByListaProdotti_id(id);
-			logger.info(listFound0 + "found by " + id);
-			return new ResponseEntity<List<Prodotto>>(listFound0, HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error("Error : " + e);
-			return new ResponseEntity<List<Prodotto>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	@GetMapping("/findList/{id}")
+//	public ResponseEntity<List<Prodotto>> findByListaProdotti_id(@PathVariable int id) {
+//		try {
+//			List<Prodotto> listFound0 = historyService.findByListaProdotti_id(id);
+//			logger.info(listFound0 + "found by " + id);
+//			return new ResponseEntity<List<Prodotto>>(listFound0, HttpStatus.OK);
+//		} catch (Exception e) {
+//			logger.error("Error : " + e);
+//			return new ResponseEntity<List<Prodotto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 
 }

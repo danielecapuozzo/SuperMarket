@@ -17,7 +17,6 @@ public interface HistoryService {
 
 	History findById(int id);
 	
-	List<Prodotto>findByListaProdotti_id(int id);
 
 
 

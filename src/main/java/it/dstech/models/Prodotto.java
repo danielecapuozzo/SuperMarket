@@ -45,10 +45,8 @@ public class Prodotto {
 
 	private double offerta;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "HIST_ID")
-	private List<Prodotto> listaProdotti;
+	@ManyToMany(mappedBy = "listaProdotti")
+	private List<History> listaHistory;
 
 	@ManyToMany(mappedBy = "listaProdotti")
 	private List<User> listaUser;

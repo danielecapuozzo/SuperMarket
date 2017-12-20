@@ -30,7 +30,8 @@ public class History {
 	private String data;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "listaProdotti")
+	@ManyToMany
+	@JoinTable(name = "HIST_PROD", joinColumns = @JoinColumn(name = "HIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PROD_ID", referencedColumnName = "ID"))
 	List<Prodotto> listaProdotti;
 
 	@JsonIgnore
