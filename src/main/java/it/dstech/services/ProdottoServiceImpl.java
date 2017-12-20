@@ -45,5 +45,8 @@ public class ProdottoServiceImpl implements ProdottoService {
 	public List<Prodotto> findByQuantitaDisponibileGreaterThan (double quantita){
 		return prodottoRepository.findByQuantitaDisponibileGreaterThan(quantita);
 	}
+	
+	
+
 
 }

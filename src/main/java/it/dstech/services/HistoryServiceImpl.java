@@ -36,4 +36,14 @@ public class HistoryServiceImpl implements HistoryService {
 		return historyRepository.findCodByUser_id(id);
 	}
 
+	@Override
+	public History findById(int id) {
+		return historyRepository.findOne(id);
+	}
+	@Override
+	public List<Prodotto>findByListaProdotti_id(int id) {
+		return historyRepository.findByListaProdotti_id( id);
+
+	}
+	
 }

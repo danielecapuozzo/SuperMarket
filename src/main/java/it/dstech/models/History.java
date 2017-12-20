@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,8 +30,7 @@ public class History {
 	private String data;
 	
 	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "HIST_PRODJ", joinColumns = @JoinColumn(name = "HIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PRODJ_ID", referencedColumnName = "ID"))
+	@OneToMany(mappedBy = "listaProdotti")
 	List<Prodotto> listaProdotti;
 
 	@JsonIgnore
@@ -92,20 +92,19 @@ public class History {
 	public History() {
 	}
 
-	public History(int id, String cod, int prezzoTotale, String data, List<Prodotto> listaProdotti, User user) {
+	public History(int id, String cod, int prezzoTotale, String data, List<Prodotto> listaProdotti) {
 		super();
 		this.id = id;
 		this.cod = cod;
 		this.prezzoTotale = prezzoTotale;
 		this.data = data;
 		this.listaProdotti = listaProdotti;
-		this.user = user;
 	}
 
 	@Override
 	public String toString() {
 		return "History [id=" + id + ", cod=" + cod + ", prezzoTotale=" + prezzoTotale + ", data=" + data
-				+ ", listaProdotti=" + listaProdotti + ", user=" + user + "]";
+				+ ", listaProdotti=" + listaProdotti + "]";
 	}
 
 	

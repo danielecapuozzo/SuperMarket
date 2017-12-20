@@ -53,9 +53,9 @@ public class HistoryController {
 	public ResponseEntity<List<History>> findByCod(@PathVariable String cod) {
 
 		try {
-			List<History> listFound = historyService.findAll();
-			logger.info(listFound + "found by " + cod);
-			return new ResponseEntity<List<History>>(listFound, HttpStatus.OK);
+			List<History> listFound0 = historyService.findByCod(cod);
+			logger.info(listFound0 + "found by " + cod);
+			return new ResponseEntity<List<History>>(listFound0, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error : " + e);
 			return new ResponseEntity<List<History>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,10 +80,10 @@ public class HistoryController {
 	@GetMapping("/findCodByUserId")
 	public ResponseEntity<List<History>> findCodByUser_id() {
 
-		try {	
+		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			int userid = userService.findByUsername(auth.getName()).getId();	
-			List<History> listFound =historyService.findCodByUser_id(userid);
+			int userid = userService.findByUsername(auth.getName()).getId();
+			List<History> listFound = historyService.findCodByUser_id(userid);
 			logger.info(listFound + "found by " + userid);
 			return new ResponseEntity<List<History>>(listFound, HttpStatus.OK);
 		} catch (Exception e) {
@@ -91,4 +91,33 @@ public class HistoryController {
 			return new ResponseEntity<List<History>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GetMapping("/findById/{id}")
+	public ResponseEntity<History> findById(@PathVariable int id) {
+		try {
+			History found = historyService.findById(id);
+			if (found != null) {
+				logger.info("Model; " + found);
+				return new ResponseEntity<History>(found, HttpStatus.OK);
+			} else
+				return new ResponseEntity<History>(HttpStatus.NOT_FOUND);
+
+		} catch (Exception e) {
+			return new ResponseEntity<History>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("/findList/{id}")
+	public ResponseEntity<List<Prodotto>> findByListaProdotti_id(@PathVariable int id) {
+		try {
+			List<Prodotto> listFound0 = historyService.findByListaProdotti_id(id);
+			logger.info(listFound0 + "found by " + id);
+			return new ResponseEntity<List<Prodotto>>(listFound0, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Error : " + e);
+			return new ResponseEntity<List<Prodotto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
 }
