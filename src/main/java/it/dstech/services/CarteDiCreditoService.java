@@ -10,7 +10,7 @@ public interface CarteDiCreditoService {
 	
 	void deleteCarteDiCredito(int id);
 	
-	List<CarteDiCredito> findByUser_id(int id);
+	List<CarteDiCredito> findIdByUser_id(int id);
 	
 	public CarteDiCredito findById(int id);
 	

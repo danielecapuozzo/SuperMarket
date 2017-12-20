@@ -71,13 +71,12 @@ public class CarteDiCreditoController {
 	}
 
 	@GetMapping("/findByUserId")
-	public ResponseEntity<List<CarteDiCredito>> findByUser_Id(@PathVariable int id) {
-
+	public ResponseEntity<List<CarteDiCredito>> findIdByUser_Id() {
 		try {	
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			int userid = userService.findByUsername(auth.getName()).getId();	
-			List<CarteDiCredito> listFound =carteDiCreditoService.findByUser_id(userid);
-			logger.info(listFound + "found by " + id);
+			List<CarteDiCredito> listFound =carteDiCreditoService.findIdByUser_id(userid);
+			logger.info(listFound + "found by " + userid);
 			return new ResponseEntity<List<CarteDiCredito>>(listFound, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("Error : " + e);
