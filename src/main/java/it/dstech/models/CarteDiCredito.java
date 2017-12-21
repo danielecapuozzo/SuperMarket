@@ -69,9 +69,8 @@ public class CarteDiCredito {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
 
-	public CarteDiCredito(String numero, String scadenza, String ccv) {
+	public CarteDiCredito(String numero, String scadenza, String ccv, double credito) {
 		this.numero = numero;
 		this.scadenza = scadenza;
 		this.ccv = ccv;

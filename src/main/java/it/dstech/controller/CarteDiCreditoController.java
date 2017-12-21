@@ -51,7 +51,7 @@ public class CarteDiCreditoController {
 //			String encodedString = Base64.getEncoder().encodeToString(num.getBytes());
 //			carteDiCredito.setNumero(encodedString);
 			CarteDiCredito saved = carteDiCreditoService.saveCarteDiCredito(carteDiCredito);
-			userService.saveUser(user);
+	//		userService.saveUser(user);
 			logger.info("Saved: " + saved);
 			return new ResponseEntity<CarteDiCredito>(saved, HttpStatus.CREATED);
 		} catch (Exception e) {

@@ -3,6 +3,7 @@ package it.dstech.controller;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import it.dstech.models.CarteDiCredito;
 import it.dstech.models.Categoria;
 import it.dstech.models.History;
 import it.dstech.models.Prodotto;
@@ -42,14 +45,16 @@ public class ProdottoController {
 	private UserService userService;
 
 	@Autowired
+	private CarteDiCreditoService cardService;
+
+	@Autowired
 	private HistoryService historyService;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Random random = new Random();
-	
-	LocalDate dNow = LocalDate.now();
 
+	LocalDate dNow = LocalDate.now();
 
 	@GetMapping("/getModel")
 	public Prodotto getModel() {
@@ -142,7 +147,7 @@ public class ProdottoController {
 			return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@GetMapping("/findByQuantitaDisponibileGreaterThan")
 	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan() {
 		try {
@@ -169,9 +174,9 @@ public class ProdottoController {
 		}
 	}
 
-	@PostMapping("/compra")
-	public ResponseEntity<Boolean> addProdotto(@RequestBody List<Prodotto> list) {
-		
+	@PostMapping("/compra/{idCarta}")
+	public ResponseEntity<Boolean> addProdotto(@RequestBody List<Prodotto> list, @PathVariable int idCarta) {
+
 		boolean check = false;
 		try {
 			String[] alfabeto = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S",
@@ -184,29 +189,21 @@ public class ProdottoController {
 			String ssn = char1 + char2 + num1 + num2;
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
-			List<Prodotto> listaAcquistati=new ArrayList<Prodotto>();
-
+			List<Prodotto> listaAcquistati = new ArrayList<Prodotto>();
+			CarteDiCredito card = cardService.findById(idCarta);
+			logger.info("Id della carta: " + idCarta);
 
 			for (Prodotto prodotto : list) {
 
-				// CarteDiCredito card = cardService.findById(idCarta);
-				// logger.info("Id della carta: " + idCarta);
-				// Prodotto prodotto = prodSer.findById(idProd);
-				// prodotto.setQuantitaDaAcquistare(quantita);
-				// logger.info("Id del prodotto: " + idProd);
-				//
-
-				logger.info("Anno: " + dNow);
-
 				// -----
-				// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
-				// logger.info("Formatter: " + formatter);
-				// String date = card.getScadenza();
-				// logger.info("Date: " + date);
-				// YearMonth scadenzaMese = YearMonth.parse(date, formatter);
-				// logger.info("ScadenzaMese: " + scadenzaMese);
-				// LocalDate scadenza = scadenzaMese.atEndOfMonth();
-				// logger.info("Scadenza: " + scadenza);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+				logger.info("Formatter: " + formatter);
+				String date = card.getScadenza();
+				logger.info("Date: " + date);
+				YearMonth scadenzaMese = YearMonth.parse(date, formatter);
+				logger.info("ScadenzaMese: " + scadenzaMese);
+				LocalDate scadenza = scadenzaMese.atEndOfMonth();
+				logger.info("Scadenza: " + scadenza);
 				// // -----
 
 				DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -235,11 +232,11 @@ public class ProdottoController {
 
 				if (prodotto.getQuantitaDisponibile() > 0
 						&& prodotto.getQuantitaDaAcquistare() < prodotto.getQuantitaDisponibile()) {
-				
-//					for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
-//						user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
-//					user.setListaProdotti(user.getListaProdotti());
-//					logger.info("Lista prodotti user: " + user.getListaProdotti());
+
+					// for (int i = 0; i < prodotto.getQuantitaDaAcquistare(); i++)
+					// user.getListaProdotti().add(prodSer.findById(prodotto.getId()));
+					// user.setListaProdotti(user.getListaProdotti());
+					// logger.info("Lista prodotti user: " + user.getListaProdotti());
 					logger.info("Lista prodotti user: " + prodSer.findById(prodotto.getId()));
 					prodotto.setPrezzoSenzaIva(prodotto.getPrezzoIvato() - (prodotto.getPrezzoIvato() * 0.22));
 					prodotto.setPrezzoIvato(prodotto.getQuantitaDaAcquistare() * prodotto.getPrezzoUnitario());
@@ -251,13 +248,11 @@ public class ProdottoController {
 					userService.saveUser(user);
 					// ------
 					// cardService.saveCarteDiCredito(card);
-					// ---------
+					// ----------
 					check = true;
 				} else {
 					throw new Exception();
 				}
-
-			
 
 			}
 			History history = new History();
@@ -267,7 +262,7 @@ public class ProdottoController {
 			int minute = time.getMinute();
 			LocalTime time2 = LocalTime.of(hour, minute);
 			String dataOrdine = dNow + "_" + time2;
-			
+
 			history.setListaProdotti(listaAcquistati);
 			history.setUser(user);
 			history.setData(dataOrdine);
@@ -279,8 +274,5 @@ public class ProdottoController {
 			return new ResponseEntity<Boolean>(check, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
-
 
 }
