@@ -47,10 +47,11 @@ public class CarteDiCreditoController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			carteDiCredito.setUser(user);
-			String num = carteDiCredito.getNumero();
-			String encodedString = Base64.getEncoder().encodeToString(num.getBytes());
-			carteDiCredito.setNumero(encodedString);
+//			String num = carteDiCredito.getNumero();
+//			String encodedString = Base64.getEncoder().encodeToString(num.getBytes());
+//			carteDiCredito.setNumero(encodedString);
 			CarteDiCredito saved = carteDiCreditoService.saveCarteDiCredito(carteDiCredito);
+			userService.saveUser(user);
 			logger.info("Saved: " + saved);
 			return new ResponseEntity<CarteDiCredito>(saved, HttpStatus.CREATED);
 		} catch (Exception e) {
