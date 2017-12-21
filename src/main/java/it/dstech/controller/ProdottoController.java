@@ -129,6 +129,20 @@ public class ProdottoController {
 		}
 	}
 
+	@GetMapping("/findByNome/{nome}")
+	public ResponseEntity<List<Prodotto>> findByNome(@PathVariable String nome) {
+		try {
+			List<Prodotto> listFound = prodSer.findByNome(nome);
+			if (listFound != null) {
+				logger.info("Model; " + listFound);
+				return new ResponseEntity<List<Prodotto>>(listFound, HttpStatus.OK);
+			} else
+				return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<List<Prodotto>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@GetMapping("/findByQuantitaDisponibileGreaterThan")
 	public ResponseEntity<List<Prodotto>> findByQuantitaDisponibileGreaterThan() {
 		try {

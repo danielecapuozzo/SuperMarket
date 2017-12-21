@@ -19,8 +19,6 @@ public interface ProdottoService {
 	
 	public Prodotto findById(int id);
 	
-
-
-	
+	List<Prodotto> findByNome (String nome);
 	
 }
